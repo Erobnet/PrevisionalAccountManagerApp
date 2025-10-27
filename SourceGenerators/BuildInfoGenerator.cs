@@ -19,23 +19,24 @@ public class BuildInfoGenerator : IIncrementalGenerator
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-// #if DEBUG
-//         // Add debugging trigger based on configuration
-//         if (!System.Diagnostics.Debugger.IsAttached)
-//         {
-//             System.Diagnostics.Debugger.Launch();
-//         }
-// #endif
-
         // Get MSBuild properties
         var configProvider = context.AnalyzerConfigOptionsProvider.Select(static (provider, _) => GetConfiguration(provider));
         // Get all types from compilation with stable ordering and comprehensive collection
-        var typeCollector = context.CompilationProvider.Select((compilation, _) =>
+        var compilationConfigProvider = configProvider.Combine(context.CompilationProvider);
+        var typeCollector = compilationConfigProvider.Select((data, ct) =>
         {
-            return compilation.GetSymbolsWithName(_ => true, SymbolFilter.Type, _)
-                .Where(t => Equals(t.ContainingNamespace?.ToString(), compilation.GlobalNamespace.ToString()))
+            var (config, compilation) = data;
+#if DEBUG
+            // Add debugging trigger based on configuration
+            if ( config.EnableDebugOutput && !System.Diagnostics.Debugger.IsAttached )
+            {
+                System.Diagnostics.Debugger.Launch();
+            }
+#endif
+            return compilation.GetSymbolsWithName(_ => true, SymbolFilter.Type, ct)
+                .Where(t => IsTargetType(config, t))
                 .OfType<INamedTypeSymbol>()
-                .Select(t => CollectTypeInfo(t))
+                .Select(CollectTypeInfo)
                 .OrderBy(t => t.FullName) // Stable ordering
                 .ToArray();
         });
@@ -44,6 +45,11 @@ public class BuildInfoGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(combined,
             static (spc, data) => GenerateCode(spc, data.Left, data.Right));
+    }
+
+    private static bool IsTargetType(GeneratorConfig config, ISymbol t)
+    {
+        return string.IsNullOrWhiteSpace(config.Namespace) || Equals(t.ContainingNamespace?.ToString(), config.Namespace);
     }
 
     private static TypeInfo CollectTypeInfo(INamedTypeSymbol type)
@@ -95,10 +101,10 @@ public class BuildInfoGenerator : IIncrementalGenerator
         return sb.ToString();
     }
 
-    private static MemberInfo[] CollectTypeMembers(INamedTypeSymbol type)
+    private static IEnumerable<MemberInfo> CollectTypeMembers(INamedTypeSymbol type)
     {
         return type.GetMembers()
-            .Where(m => !m.IsImplicitlyDeclared)
+            .Where(FilterTrackedMembers)
             .Select(m => new MemberInfo {
                 Name = m.Name,
                 Kind = m.Kind.ToString(),
@@ -108,8 +114,16 @@ public class BuildInfoGenerator : IIncrementalGenerator
                 IsOverride = m.IsOverride,
                 IsAbstract = m.IsAbstract,
                 Signature = GetMemberSignature(m)
-            })
-            .ToArray();
+            });
+    }
+
+    private static bool FilterTrackedMembers(ISymbol m)
+    {
+        return !m.IsImplicitlyDeclared
+               && !m.IsStatic
+               && m.DeclaredAccessibility != Accessibility.Private && m.DeclaredAccessibility != Accessibility.ProtectedAndInternal && m.DeclaredAccessibility != Accessibility.Internal && m.DeclaredAccessibility != Accessibility.Protected
+               && (m.Kind == SymbolKind.Property || m.Kind == SymbolKind.Field)
+            ;
     }
 
     private static string GetMemberSignature(ISymbol member)
@@ -154,16 +168,16 @@ public class BuildInfoGenerator : IIncrementalGenerator
 
         namespace {config.Namespace}
         {{
-            public class {config.Prefix}BuildInfo
+            public class {config.Prefix}TypesStableHash
             {{
-                public string BuildDataHash = ""{ComputeBuildHash(config, types)}"";
+                public string TypesStableHash = ""{ComputeBuildHash(types)}"";
             }}
         }}";
 
-        context.AddSource($"{config.Prefix}BuildInfo.g.cs", SourceText.From(buildInfo, Encoding.UTF8));
+        context.AddSource($"{config.Prefix}TypesStableHash.g.cs", SourceText.From(buildInfo, Encoding.UTF8));
     }
 
-    private static string ComputeBuildHash(GeneratorConfig config, TypeInfo[] types)
+    private static string ComputeBuildHash(TypeInfo[] types)
     {
         using var sha256 = SHA256.Create(); // SHA256 is more robust than MD5
 
@@ -173,33 +187,19 @@ public class BuildInfoGenerator : IIncrementalGenerator
         {
             sb.AppendLine($"Type: {type.FullName}");
             sb.AppendLine($"Kind: {type.TypeKind}");
-            sb.AppendLine($"Accessibility: {type.Accessibility}");
-            sb.AppendLine($"IsAbstract: {type.IsAbstract}");
-            sb.AppendLine($"IsSealed: {type.IsSealed}");
-            sb.AppendLine($"IsStatic: {type.IsStatic}");
-            sb.AppendLine($"IsGeneric: {type.IsGeneric}");
-            sb.AppendLine($"GenericParameters: [{string.Join(", ", type.GenericParameters)}]");
-            sb.AppendLine($"BaseType: {type.BaseType}");
-            sb.AppendLine($"Interfaces: [{string.Join(", ", type.Interfaces)}]");
-
-            foreach ( var member in type.Members.OrderBy(m => m.Signature) )
+            foreach ( var member in type.Members )
             {
                 sb.AppendLine($"  Member: {member.Name}");
                 sb.AppendLine($"    Kind: {member.Kind}");
-                sb.AppendLine($"    Accessibility: {member.Accessibility}");
-                sb.AppendLine($"    IsStatic: {member.IsStatic}");
-                sb.AppendLine($"    IsVirtual: {member.IsVirtual}");
-                sb.AppendLine($"    IsOverride: {member.IsOverride}");
-                sb.AppendLine($"    IsAbstract: {member.IsAbstract}");
                 sb.AppendLine($"    Signature: {member.Signature}");
             }
-            sb.AppendLine("---");
         }
 
         var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        sb.Clear();
         var hash = sha256.ComputeHash(bytes);
 
-        return Convert.ToHexString(hash);
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
     }
 
     private struct TypeInfo

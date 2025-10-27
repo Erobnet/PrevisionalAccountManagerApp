@@ -1,0 +1,27 @@
+﻿<Application x:Class="PrevisionalAccountManager.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:PrevisionalAccountManager.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+        <!-- Merge External Resource Dictionaries -->
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Default Theme  -->
+                <ResourceDictionary Source="Styles/DarkTheme.xaml" />
+                <ResourceDictionary Source="Styles/CommonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Core Converters -->
+            <converters:BoolToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <converters:BooleanToVisibilityIconConverter x:Key="BooleanToVisibilityIconConverter" />
+            <converters:AmountTypeToNumberConverter x:Key="AmountTypeToNumberConverter" />
+            <converters:CategoryReadonlyToDisplayStringConverter x:Key="CategoryReadonlyToDisplayStringConverter" />
+            <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+            <converters:AmountTypeToColorConverter x:Key="AmountTypeToColorConverter" />
+            <converters:ColorThemeConverter x:Key="ColorThemeConverter" />
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
