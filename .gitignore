@@ -3,6 +3,8 @@
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
 
+#never version Databases
+*.db
 
 #Unity Editor 
 ###############
