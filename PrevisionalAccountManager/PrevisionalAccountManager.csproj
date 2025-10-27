@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>14</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <HashGeneratorNamespace>PrevisionalAccountManager.Models.DataBaseEntities</HashGeneratorNamespace>
+        <MyGeneratorPrefix>Database</MyGeneratorPrefix>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <EnableDebugOutput>false</EnableDebugOutput>
+    </PropertyGroup>
+
+    <ItemGroup Label="Packages">
+        <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0-rc.2.25502.107" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0-rc.2.25502.107" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-rc.2.25502.107" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0-rc.2.25502.107" />
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0-rc.2.25502.107">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0-rc.2.25502.107">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        
+        <PackageReference Include="NetEscapades.EnumGenerators" Version="1.0.0-beta14" PrivateAssets="all" ExcludeAssets="runtime">
+            <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        
+<!--        <PackageReference Include="Pure.DI" Version="2.2.13">-->
+<!--          <PrivateAssets>all</PrivateAssets>-->
+<!--          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
+<!--        </PackageReference>-->
+    </ItemGroup>
+    <!-- Pass MSBuild properties to the source generator -->
+    <ItemGroup Label="SourceGenerators">
+        <CompilerVisibleProperty Include="HashGeneratorNamespace" />
+        <CompilerVisibleProperty Include="EnableDebugOutput" />
+        <CompilerVisibleProperty Include="MyGeneratorPrefix" />
+        <ProjectReference Include="..\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Page Update="Views\AccountBalanceView.xaml">
+            <Generator>MSBuild:Compile</Generator>
+            <XamlRuntime>Wpf</XamlRuntime>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
+</Project>

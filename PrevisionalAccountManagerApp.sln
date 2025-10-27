@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrevisionalAccountManager", "PrevisionalAccountManager\PrevisionalAccountManager.csproj", "{E8FA3F97-5582-42AF-84A2-696533471F41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators", "SourceGenerators\SourceGenerators.csproj", "{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8FA3F97-5582-42AF-84A2-696533471F41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8FA3F97-5582-42AF-84A2-696533471F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8FA3F97-5582-42AF-84A2-696533471F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8FA3F97-5582-42AF-84A2-696533471F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
