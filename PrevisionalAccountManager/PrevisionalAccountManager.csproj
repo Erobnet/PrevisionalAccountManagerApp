@@ -11,9 +11,9 @@
         <PublishSingleFile>true</PublishSingleFile>
         <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
         <PublishDir>..\Publish</PublishDir>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <EnableDebugOutput>false</EnableDebugOutput>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>SignAssembly.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
     </PropertyGroup>
 
     <ItemGroup Label="Packages">
