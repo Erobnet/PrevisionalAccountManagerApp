@@ -164,7 +164,7 @@ namespace PrevisionalAccountManager.Services
                 .Where(t => t.OwnerUserId == loginService.CurrentUserId
                             && (string.IsNullOrWhiteSpace(searchInput.Observations) || t.Observations.Contains(searchInput.Observations))
                             && (searchInput.Amount == 0 || t.Amount == searchInput.Amount)
-                            && (searchInput.Date == default || t.Date <= searchInput.Date)
+                            && (searchInput.Date == default || (searchInput.Date.IsSingleDay ? t.Date <= searchInput.Date.Start : t.Date >= searchInput.Date.Start && t.Date <= searchInput.Date.End))
                             && (!searchInput.CategoryId.HasValue || searchInput.CategoryId == t.CategoryId)
                 )
                 .ToArray();

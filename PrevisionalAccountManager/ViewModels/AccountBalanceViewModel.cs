@@ -17,7 +17,7 @@ namespace PrevisionalAccountManager.ViewModels
         protected readonly ITransactionService _transactionService;
         protected readonly ICategoryService _categoryService;
         protected readonly List<DateRange> _selectedDateRanges;
-        protected  List<TransactionViewModel> _filteredTransactions;
+        protected List<TransactionViewModel> _filteredTransactions;
         public PeriodType[] AvailablePeriodTypes { get; }
 
         private readonly CurrencyModel _currentCurrency = new() {
@@ -152,7 +152,7 @@ namespace PrevisionalAccountManager.ViewModels
 
         private void SearchTransaction()
         {
-            var transactionSearchInput = new TransactionSearchInput(NewTransactionViewModel.Amount, NewTransactionViewModel.Date, NewTransactionViewModel.Category?.Id, NewTransactionViewModel.Observations);
+            var transactionSearchInput = new TransactionSearchInput(NewTransactionViewModel.Amount, _selectedDateRanges[0], NewTransactionViewModel.Category?.Id, NewTransactionViewModel.Observations);
             var searchResult = _transactionService.GetTransactions(transactionSearchInput);
             UpdateSelectedDateTransactions(searchResult);
         }
@@ -309,30 +309,28 @@ namespace PrevisionalAccountManager.ViewModels
 
             _selectedDateRanges.Clear();
             DateTime rangeStart = sortedDates[0];
-            DateTime rangeEnd = sortedDates[0];
-            var transactionCount = 0;
-            for ( int i = 1; i < sortedDates.Count; i++ )
+            DateTime rangeEnd = rangeStart;
+            int transactionIndex = 1;
+            for ( ; transactionIndex < sortedDates.Count; transactionIndex++ )
             {
                 // Check if current date is consecutive to the previous one
-                if ( sortedDates[i] == rangeEnd.AddDays(1) )
+                if ( sortedDates[transactionIndex] == rangeEnd.AddDays(1) )
                 {
-                    transactionCount++;
                     // Extend current range
-                    rangeEnd = sortedDates[i];
+                    rangeEnd = sortedDates[transactionIndex];
                 }
                 else
                 {
-                    transactionCount++;
                     // Current date is not consecutive, close current range and start new one
                     _selectedDateRanges.Add(new(rangeStart, rangeEnd));
-                    rangeStart = sortedDates[i];
-                    rangeEnd = sortedDates[i];
+                    rangeStart = sortedDates[transactionIndex];
+                    rangeEnd = rangeStart;
                 }
             }
 
             // Add the last range
             _selectedDateRanges.Add(new(rangeStart, rangeEnd));
-            UpdateTransactionSelectionFromDateRanges(_selectedDateRanges.AsSpan(), transactionCount);
+            UpdateTransactionSelectionFromDateRanges(_selectedDateRanges.AsSpan(), transactionIndex-1);
         }
 
         private void UpdateTransactionSelectionFromDateRanges(ReadOnlySpan<DateRange> selectedDateRanges, int transactionCount = 8)

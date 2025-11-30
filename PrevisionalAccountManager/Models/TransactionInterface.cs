@@ -9,6 +9,5 @@ namespace PrevisionalAccountManager.Models
         string Observations { get; set; }
         DateTime Date { get; set; }
         TransactionModel Model { get; }
-        
     }
 }
