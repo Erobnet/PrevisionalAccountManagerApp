@@ -104,7 +104,7 @@ namespace PrevisionalAccountManager.Models
 
                 return System.Text.Json.JsonSerializer.Deserialize<List<T>>(jsonData, options) ?? new List<T>();
             }
-            catch (Exception ex)
+            catch
             {
                 throw;
             }
@@ -112,7 +112,7 @@ namespace PrevisionalAccountManager.Models
 
         private string BuildCompatibleJson<T>(string tableName)
         {
-            var jsonArray = new List<Dictionary<string, object>>();
+            var jsonArray = new List<Dictionary<string, object?>>();
             var sql = $"SELECT * FROM {tableName}";
 
             using var command = Database.GetDbConnection().CreateCommand();
@@ -130,7 +130,7 @@ namespace PrevisionalAccountManager.Models
 
                 while ( reader.Read() )
                 {
-                    var row = new Dictionary<string, object>();
+                    var row = new Dictionary<string, object?>();
 
                     // Add existing columns from database
                     for ( int i = 0; i < reader.FieldCount; i++ )

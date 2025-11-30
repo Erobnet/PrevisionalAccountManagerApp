@@ -1,14 +1,4 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using PrevisionalAccountManager.Models;
+﻿using System.Windows.Controls;
 using PrevisionalAccountManager.ViewModels;
 
 namespace PrevisionalAccountManager.Views;
@@ -36,7 +26,6 @@ public partial class AccountBalanceView
     {
         if ( DataContext is AccountBalanceViewModel viewModel )
         {
-            // Update the ViewModel's selected transactions
             viewModel.UpdateDateFilter(CalendarTransactionDateSelection.SelectedDates);
         }
     }

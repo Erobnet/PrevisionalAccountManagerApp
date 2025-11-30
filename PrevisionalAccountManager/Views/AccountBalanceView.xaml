@@ -80,12 +80,14 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <ComboBox
-                                IsEditable="True"
-                                ItemsSource="{Binding Categories}"
-                                Text="{Binding NewCategoryName,Mode=OneWayToSource}"
-                                SelectedItem="{Binding SelectedCategory}"
-                                DisplayMemberPath="Name"
-                                SelectedValuePath="Id" />
+                                      IsEditable="True"
+                                      StaysOpenOnEdit="True"
+                                      ItemsSource="{Binding Categories}"
+                                      Text="{Binding NewCategoryName, Mode=OneWayToSource}"
+                                      SelectedItem="{Binding SelectedCategory}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id">
+                            </ComboBox>
                             <Button Grid.Column="1"
                                     Content="+"
                                     Command="{Binding AddCategoryCommand}"
@@ -93,7 +95,7 @@
                                     Style="{StaticResource BaseInteractableComponent}"
                                     ToolTip="Add Category" />
                         </Grid>
-                        
+
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
                             <Button Content="Add Transaction"
