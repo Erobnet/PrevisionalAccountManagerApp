@@ -58,9 +58,6 @@ namespace PrevisionalAccountManager
             services.AddSingleton<IStyleService, StyleService>();
             services.AddSingleton<ICategoryService, CategoryService>();
             services.AddSingleton<ITransactionService, TransactionService>();
-
-            // Register other services you need
-            // services.AddTransient<IOtherService, OtherService>();
         }
 
         protected override void OnExit(ExitEventArgs e)

@@ -6,7 +6,7 @@
              xmlns:app="PrevisionalAccountManager"
              xmlns:vm="clr-namespace:PrevisionalAccountManager.ViewModels"
              mc:Ignorable="d"
-             d:DesignWidth="1000" d:DesignHeight="800">
+             d:DesignWidth="1368" d:DesignHeight="800">
     <UserControl.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource FieldLabelStyle}" />
     </UserControl.Resources>
@@ -22,8 +22,7 @@
             <StackPanel Orientation="Horizontal" Background="Transparent">
                 <TextBlock Text="💰 Provisional Account Manager"
                            Style="{StaticResource TitleStyle}"
-                           Foreground="White"
-                           VerticalAlignment="Center" />
+                           Foreground="White" />
             </StackPanel>
         </Border>
 
@@ -36,100 +35,102 @@
 
             <!-- Left Panel: Calendar and Add Transaction -->
             <Border Grid.Column="0">
-                <StackPanel Margin="10">
-                    <Label Content="📅 Select Date" />
-                    <Calendar x:Name="CalendarTransactionDateSelection"
-                              SelectionMode="MultipleRange"
-                              HorizontalAlignment="Center"
-                              SelectedDatesChanged="CalendarTransactionDateSelection_OnSelectedDatesChanged" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <Label Content="📅 Select Date" />
+                        <Calendar x:Name="CalendarTransactionDateSelection"
+                                  SelectionMode="MultipleRange"
+                                  HorizontalAlignment="Center"
+                                  SelectedDatesChanged="CalendarTransactionDateSelection_OnSelectedDatesChanged" />
 
-                    <Separator Margin="0,10" />
+                        <Separator Margin="0,10" />
 
-                    <Label Content="Transaction Detail" FontSize="16" />
-                    <Label Content="Period:" />
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <ComboBox ItemsSource="{Binding AvailablePeriodTypes}"
-                                  SelectedItem="{Binding SelectedPeriodType}"
-                                  Grid.Column="0" />
-                        <TextBox Visibility="{Binding IsPeriodCountVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                 Text="{Binding PeriodCount}"
-                                 Grid.Column="1"
-                                 Width="60" />
-                    </Grid>
+                        <Label Content="Transaction Detail" FontSize="16" />
+                        <Label Content="Period:" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox ItemsSource="{Binding AvailablePeriodTypes}"
+                                      SelectedItem="{Binding SelectedPeriodType}"
+                                      Grid.Column="0" />
+                            <TextBox Visibility="{Binding IsPeriodCountVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                     Text="{Binding PeriodCount}"
+                                     Grid.Column="1"
+                                     Width="60" />
+                        </Grid>
 
-                    <Label Content="Amount:" />
-                    <TextBox
-                        Text="{Binding NewTransactionViewModel.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource AmountTypeToNumberConverter}}"
-                        VerticalContentAlignment="Center"
-                        Style="{StaticResource BaseInteractableComponent}" />
+                        <Label Content="Amount:" />
+                        <TextBox
+                            Text="{Binding NewTransactionViewModel.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource AmountTypeToNumberConverter}}"
+                            VerticalContentAlignment="Center"
+                            Style="{StaticResource BaseInteractableComponent}" />
 
-                    <Label Content="Observation:" />
-                    <TextBox Text="{Binding NewTransactionViewModel.Observations, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource BaseInteractableComponent}"
-                             VerticalContentAlignment="Center" />
+                        <Label Content="Observation:" />
+                        <TextBox Text="{Binding NewTransactionViewModel.Observations, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource BaseInteractableComponent}"
+                                 VerticalContentAlignment="Center" />
 
-                    <Label Content="Category:" />
-                    <!-- Add New Category Section -->
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <ComboBox
-                            IsEditable="True"
-                            ItemsSource="{Binding Categories}"
-                            Text="{Binding NewCategoryName,Mode=OneWayToSource}"
-                            SelectedItem="{Binding SelectedCategory}"
-                            DisplayMemberPath="Name"
-                            SelectedValuePath="Id" />
-                        <Button Grid.Column="1"
-                                Content="+"
-                                Command="{Binding AddCategoryCommand}"
-                                Width="40"
-                                Style="{StaticResource BaseInteractableComponent}"
-                                ToolTip="Add Category" />
-                    </Grid>
+                        <Label Content="Category:" />
+                        <!-- Add New Category Section -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox
+                                IsEditable="True"
+                                ItemsSource="{Binding Categories}"
+                                Text="{Binding NewCategoryName,Mode=OneWayToSource}"
+                                SelectedItem="{Binding SelectedCategory}"
+                                DisplayMemberPath="Name"
+                                SelectedValuePath="Id" />
+                            <Button Grid.Column="1"
+                                    Content="+"
+                                    Command="{Binding AddCategoryCommand}"
+                                    Width="40"
+                                    Style="{StaticResource BaseInteractableComponent}"
+                                    ToolTip="Add Category" />
+                        </Grid>
 
-                    <Label Content="Date:" />
-                    <DatePicker SelectedDate="{Binding NewTransactionViewModelDate}">
-                        <DatePicker.Resources>
-                            <Style TargetType="{x:Type DatePickerTextBox}">
-                                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
-                                            <TextBox x:Name="PART_TextBox"
-                                                     Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type DatePickerTextBox}}}"
-                                                     Foreground="{DynamicResource TextBrush}"
-                                                     Background="{DynamicResource BackgroundBrush}"
-                                                     CaretBrush="{DynamicResource TextBrush}"
-                                                     SelectionBrush="{DynamicResource BackgroundBrush}"
-                                                     SelectionTextBrush="{DynamicResource TextBrush}" />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </DatePicker.Resources>
-                    </DatePicker>
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center">
-                        <Button Content="Add Transaction"
-                                Command="{Binding AddTransactionCommand}"
-                                Width="Auto"
-                                Margin="0,10,5,0"
-                                Style="{StaticResource PrimaryButtonStyle}" />
-                        <Button Content="Search Transaction"
-                                Command="{Binding SearchTransactionCommand}"
-                                Width="Auto"
-                                Style="{StaticResource PrimaryButtonStyle}"
-                                Margin="5,10,0,0" />
+                        <Label Content="Date:" />
+                        <DatePicker SelectedDate="{Binding NewTransactionViewModelDate}">
+                            <DatePicker.Resources>
+                                <Style TargetType="{x:Type DatePickerTextBox}">
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                    <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                                                <TextBox x:Name="PART_TextBox"
+                                                         Text="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type DatePickerTextBox}}}"
+                                                         Foreground="{DynamicResource TextBrush}"
+                                                         Background="{DynamicResource BackgroundBrush}"
+                                                         CaretBrush="{DynamicResource TextBrush}"
+                                                         SelectionBrush="{DynamicResource BackgroundBrush}"
+                                                         SelectionTextBrush="{DynamicResource TextBrush}" />
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <Button Content="Add Transaction"
+                                    Command="{Binding AddTransactionCommand}"
+                                    Width="Auto"
+                                    Margin="0,10,5,0"
+                                    Style="{StaticResource PrimaryButtonStyle}" />
+                            <Button Content="Search Transaction"
+                                    Command="{Binding SearchTransactionCommand}"
+                                    Width="Auto"
+                                    Style="{StaticResource PrimaryButtonStyle}"
+                                    Margin="5,10,0,0" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </ScrollViewer>
             </Border>
 
             <!-- Center Panel: Selected Date Details -->

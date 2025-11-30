@@ -135,7 +135,7 @@ public class LoginViewModel : INotifyPropertyChanged, IViewModel
 
     public IReadOnlyList<ColorTheme> AvailableThemes => _styleService.AvailableThemes;
 
-    public string FormTitle => IsCreateAccountMode ? "Create Account" : "Login";
+    public virtual string FormTitle => IsCreateAccountMode ? "Create Account" : "Login";
     public string PrimaryButtonText => IsCreateAccountMode ? "Create Account" : "Login";
     public string ToggleButtonText => IsCreateAccountMode ? "Back to Login" : "Create New Account";
 
@@ -468,4 +468,19 @@ public enum ColorTheme
 {
     DarkTheme,
     LightTheme,
+}
+
+public class LoginViewModelDesign : LoginViewModel
+{
+    public override string FormTitle => "Login";
+
+    public LoginViewModelDesign()
+    {
+        Username = "johndoe";
+        Password = "";
+        ConfirmPassword = "";
+        IsCreateAccountMode = true;
+        SelectedTheme = ColorTheme.DarkTheme;
+
+    }
 }

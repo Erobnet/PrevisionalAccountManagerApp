@@ -5,42 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:PrevisionalAccountManager.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="800" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=vm:LoginViewModel, IsDesignTimeCreatable=True}">
+             d:DesignHeight="1000" d:DesignWidth="1368"
+             d:DataContext="{d:DesignInstance Type=vm:LoginViewModelDesign, IsDesignTimeCreatable=True}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Theme Selector at the top -->
-        <StackPanel Grid.Row="0" Orientation="Vertical" HorizontalAlignment="Right" Margin="20,15">
-          
-            <TextBlock Text="Theme: " VerticalAlignment="Center" Margin="0,0,8,0"
-                       Style="{DynamicResource FieldLabelStyle}" />
-            <ComboBox ItemsSource="{Binding AvailableThemes}"
-                      SelectedItem="{Binding SelectedTheme}"
-                      Width="120" Height="30">
-            </ComboBox>
-            <Button Content="Backup Database"
-                Command="{Binding BackupDatabaseCommand}"
-                Style="{DynamicResource PrimaryButtonStyle}"
-                ToolTip="Allow exporting database" />
-            <Button Content="Import Database"
-                    Command="{Binding ImportDatabaseCommand}"
-                    Style="{DynamicResource PrimaryButtonStyle}"
-                    ToolTip="Allow Importing database" />
-        </StackPanel>
-
         <!-- Main Content -->
-        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
+        <StackPanel HorizontalAlignment="Center">
             <StackPanel.InputBindings>
                 <KeyBinding Key="Enter" Command="{Binding PrimaryCommand}" />
             </StackPanel.InputBindings>
 
             <!-- Title -->
-            <TextBlock Style="{DynamicResource TitleStyle}" Text="{Binding FormTitle}" />
+            <TextBlock Style="{DynamicResource TitleStyle}"
+                       Text="{Binding FormTitle}"
+                       />
 
             <!-- Username -->
             <TextBlock Style="{DynamicResource FieldLabelStyle}" Text="Username:" />
@@ -128,7 +105,8 @@
 
             <!-- Error Message -->
             <TextBlock Text="{Binding ErrorMessage}" Style="{DynamicResource ErrorTextStyle}"
-                       Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                       Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                       />
 
             <!-- Password Requirements -->
             <TextBlock Style="{DynamicResource HelperTextStyle}"
@@ -139,6 +117,24 @@
                 <LineBreak />
                 <Run Text="• Username must be at least 3 characters long" />
             </TextBlock>
+        </StackPanel>
+        <!-- Theme Selector at the top -->
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="20,15" Height="Auto">
+          
+            <TextBlock Text="Theme: " VerticalAlignment="Center" Margin="0,0,8,0"
+                       Style="{DynamicResource FieldLabelStyle}" />
+            <ComboBox ItemsSource="{Binding AvailableThemes}"
+                      SelectedItem="{Binding SelectedTheme}"
+                      Width="120" Height="30">
+            </ComboBox>
+            <Button Content="Backup Database"
+                    Command="{Binding BackupDatabaseCommand}"
+                    Style="{DynamicResource PrimaryButtonStyle}"
+                    ToolTip="Allow exporting database" />
+            <Button Content="Import Database"
+                    Command="{Binding ImportDatabaseCommand}"
+                    Style="{DynamicResource PrimaryButtonStyle}"
+                    ToolTip="Allow Importing database" />
         </StackPanel>
     </Grid>
 </UserControl>
