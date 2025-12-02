@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:PrevisionalAccountManager.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="1000" d:DesignWidth="1368"
-             d:DataContext="{d:DesignInstance Type=vm:LoginViewModelDesign, IsDesignTimeCreatable=True}">
+             d:DataContext="{d:DesignInstance Type=vm:LoginViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <!-- Main Content -->
         <StackPanel HorizontalAlignment="Center">
@@ -43,14 +43,6 @@
                          Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
                          Visibility="{Binding IsPasswordVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                <!-- Toggle Button -->
-                <Button Grid.Column="1"
-                        Command="{Binding TogglePasswordVisibilityCommand}"
-                        Style="{DynamicResource EyeToggleButtonStyle}"
-                        ToolTip="Toggle password visibility">
-                    <TextBlock Text="{Binding IsPasswordVisible, Converter={StaticResource BooleanToVisibilityIconConverter}}" />
-                </Button>
             </Grid>
 
             <!-- Confirm Password (only visible in create account mode) -->
@@ -73,14 +65,6 @@
                          Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"
                          IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}"
                          Visibility="{Binding IsConfirmPasswordVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                <!-- Toggle Button -->
-                <Button Grid.Column="1"
-                        Command="{Binding ToggleConfirmPasswordVisibilityCommand}"
-                        Style="{DynamicResource EyeToggleButtonStyle}"
-                        ToolTip="Toggle password visibility">
-                    <TextBlock Text="{Binding IsConfirmPasswordVisible, Converter={StaticResource BooleanToVisibilityIconConverter}}" />
-                </Button>
             </Grid>
 
             <!-- Primary Action Button -->

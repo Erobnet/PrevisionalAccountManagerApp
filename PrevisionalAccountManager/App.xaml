@@ -5,11 +5,12 @@
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-        <!-- Merge External Resource Dictionaries -->
+            <!-- Merge External Resource Dictionaries -->
             <ResourceDictionary.MergedDictionaries>
                 <!-- Default Theme  -->
                 <ResourceDictionary Source="Styles/DarkTheme.xaml" />
                 <ResourceDictionary Source="Styles/CommonStyles.xaml" />
+                <ResourceDictionary Source="Styles/ComboBoxCustom.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Core Converters -->

@@ -469,18 +469,3 @@ public enum ColorTheme
     DarkTheme,
     LightTheme,
 }
-
-public class LoginViewModelDesign : LoginViewModel
-{
-    public override string FormTitle => "Login";
-
-    public LoginViewModelDesign()
-    {
-        Username = "johndoe";
-        Password = "";
-        ConfirmPassword = "";
-        IsCreateAccountMode = true;
-        SelectedTheme = ColorTheme.DarkTheme;
-
-    }
-}

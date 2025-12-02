@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:app="PrevisionalAccountManager"
              xmlns:vm="clr-namespace:PrevisionalAccountManager.ViewModels"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d"
              d:DesignWidth="1368" d:DesignHeight="800">
     <UserControl.Resources>
@@ -12,8 +13,11 @@
         <Style x:Key="TransactionDetailLabelColumn" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
             <Setter Property="Width" Value="90" />
         </Style>
-        <Style x:Key="TransactionDetailStackPanels" TargetType="StackPanel" BasedOn="{StaticResource {x:Type StackPanel}}">
-            <Setter Property="Margin" Value="0,5,0,5"></Setter>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="2.5"></Setter>
+        </Style>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Margin" Value="2.5"></Setter>
         </Style>
     </UserControl.Resources>
 
@@ -35,7 +39,7 @@
         <!-- Main Content -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="350" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -52,61 +56,61 @@
                         <Separator Margin="0,10" />
 
                         <Label Content="Transaction Detail" Style="{StaticResource TitleStyle}" />
-                  
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Style="{StaticResource TransactionDetailStackPanels}">
-                            <Label Content="Period:" Style="{StaticResource TransactionDetailLabelColumn}" />
-                            <ComboBox ItemsSource="{Binding AvailablePeriodTypes}"
-                                      SelectedItem="{Binding SelectedPeriodType}"
-                                      MinWidth="100" />
-                            <TextBox Margin="10,0,0,0" Visibility="{Binding IsPeriodCountVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                     Text="{Binding PeriodCount}"
-                                     Width="60" />
-                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
 
-                        <StackPanel Orientation="Horizontal"
-                                    Style="{StaticResource TransactionDetailStackPanels}">
-                            <Label Content="Amount:" Style="{StaticResource TransactionDetailLabelColumn}" />
-                            <TextBox
-                                Text="{Binding NewTransactionViewModel.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource AmountTypeToNumberConverter}}"
-                                VerticalContentAlignment="Center"
-                                Style="{StaticResource BaseInteractableComponent}"
-                                MinWidth="100" />
-                        </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Style="{StaticResource TransactionDetailStackPanels}">
-                            <Label Content="Observation:" Style="{StaticResource TransactionDetailLabelColumn}" />
-                            <TextBox Text="{Binding NewTransactionViewModel.Observations, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource BaseInteractableComponent}"
-                                     VerticalContentAlignment="Center"
-                                     MinWidth="100" />
-                        </StackPanel>
-                        
-                        <!-- Add New Category Section -->
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Category:" Style="{StaticResource TransactionDetailLabelColumn}" />
-                            <Grid>
+                            <Label Grid.Column="0" Content="Period:" Style="{StaticResource TransactionDetailLabelColumn}" />
+                            <Grid Grid.Row="0" Grid.Column="1">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox ItemsSource="{Binding AvailablePeriodTypes}"
+                                          SelectedItem="{Binding SelectedPeriodType}"
+                                          MinWidth="70" />
+                                <TextBox Grid.Column="1" Visibility="{Binding IsPeriodCountVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         Text="{Binding PeriodCount}" />
+                            </Grid>
+                            <!-- Amount Part-->
+                            <Label Grid.Row="1" Grid.Column="0" Content="Amount:" Style="{StaticResource TransactionDetailLabelColumn}" />
+                            <Grid Grid.Row="1" Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <ComboBox
-                                    IsEditable="True"
-                                    StaysOpenOnEdit="True"
-                                    ItemsSource="{Binding Categories}"
-                                    Text="{Binding NewCategoryName, Mode=OneWayToSource}"
-                                    SelectedItem="{Binding SelectedCategory}"
-                                    DisplayMemberPath="Name"
-                                    SelectedValuePath="Id"
-                                    MinWidth="120"
-                                    Margin="0,0,5,0" />
-                                <Button Grid.Column="1"
-                                        Content="+"
-                                        Command="{Binding AddCategoryCommand}"
-                                        Width="40"
-                                        Style="{StaticResource BaseInteractableComponent}"
-                                        ToolTip="Add Category" />
+                                    ItemsSource="{Binding AmountOperations}"
+                                    SelectedItem="{Binding SelectedOperation}"
+                                    MinWidth="70"/>
+                                <TextBox Grid.Column="1"
+                                         Text="{Binding NewTransactionViewModel.Amount, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource AmountTypeToNumberConverter}}"
+                                         VerticalContentAlignment="Center" />
                             </Grid>
-                        </StackPanel>
+                            <!-- Observation part -->
+                            <Label Grid.Row="2" Grid.Column="0" Content="Observation:" Style="{StaticResource TransactionDetailLabelColumn}" />
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewTransactionViewModel.Observations, UpdateSourceTrigger=PropertyChanged}"
+                                     MinWidth="100" />
+                            <Label Grid.Row="3" Grid.Column="0" Content="Category:" Style="{StaticResource TransactionDetailLabelColumn}" />
+                            <ComboBox Grid.Row="3" Grid.Column="1"
+                                      IsEditable="True"
+                                      StaysOpenOnEdit="True"
+                                      Text="{Binding NewCategoryName, Mode=OneWayToSource}"
+                                      ItemsSource="{Binding Categories}"
+                                      SelectedItem="{Binding SelectedCategory}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="Id"
+                                      HorizontalAlignment="Stretch" />
+                        </Grid>
+
 
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center">
@@ -175,6 +179,11 @@
                                   SelectionChanged="TransactionsListBox_SelectionChanged"
                                   MinWidth="400"
                                   Height="Auto">
+                            <d:ListView.ItemsSource>
+                                <x:Array Type="{x:Type vm:TransactionViewModel}">
+                                    <vm:TransactionViewModel Observations="Test" Amount="1" />
+                                </x:Array>
+                            </d:ListView.ItemsSource>
                             <ListView.InputBindings>
                                 <KeyBinding Key="Delete" Command="{Binding DeleteSelectedTransactionCommand}" />
                             </ListView.InputBindings>

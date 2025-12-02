@@ -12,7 +12,7 @@
     <SolidColorBrush x:Key="BorderFocusBrush" Color="#4FC3F7" />
     <SolidColorBrush x:Key="ErrorBrush" Color="#F48FB1" />
     <SolidColorBrush x:Key="SuccessBrush" Color="#A5D6A7" />
-    <SolidColorBrush x:Key="BackgroundHoverBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="BackgroundHoverBrush" Color="#29B6F6" />
     <SolidColorBrush x:Key="DisabledBrush" Color="#6D6D6D" />
 
 </ResourceDictionary>

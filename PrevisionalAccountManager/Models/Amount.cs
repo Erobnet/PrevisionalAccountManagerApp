@@ -24,7 +24,7 @@ public struct Amount : IEquatable<Amount>, IFormattable
 
     public override string ToString()
     {
-        return Value.ToString( CultureInfo.CurrentCulture);
+        return Value.ToString(CultureInfo.CurrentCulture);
     }
 
     public string ToString(IFormatProvider? format)

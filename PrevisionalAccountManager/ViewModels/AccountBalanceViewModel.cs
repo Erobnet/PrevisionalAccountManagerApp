@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,11 +15,24 @@ namespace PrevisionalAccountManager.ViewModels
 {
     public class AccountBalanceViewModel : INotifyPropertyChanged, IViewModel
     {
-        protected readonly ITransactionService _transactionService;
-        protected readonly ICategoryService _categoryService;
-        protected readonly List<DateRange> _selectedDateRanges;
-        protected List<TransactionViewModel> _filteredTransactions;
+        private readonly ITransactionService _transactionService;
+        private readonly ICategoryService _categoryService;
+        private readonly List<DateRange> _selectedDateRanges;
+        private readonly List<TransactionViewModel> _filteredTransactions;
         public PeriodType[] AvailablePeriodTypes { get; }
+        public AmountType[] AmountOperations { get; }
+
+        public AmountType SelectedOperation {
+            get;
+            set {
+                if ( value == field )
+                {
+                    return;
+                }
+                field = value;
+                OnPropertyChanged();
+            }
+        }
 
         private readonly CurrencyModel _currentCurrency = new() {
             Code = "EUR",
@@ -54,7 +68,7 @@ namespace PrevisionalAccountManager.ViewModels
                     ? 1
                     : value;
 
-                OnPropertyChanged(nameof(PeriodCount));
+                OnPropertyChanged();
             }
         }
 
@@ -83,7 +97,7 @@ namespace PrevisionalAccountManager.ViewModels
             set {
                 field = value;
                 NewTransactionViewModel.Category = value;
-                OnPropertyChanged(nameof(SelectedCategory));
+                OnPropertyChanged();
             }
         }
 
@@ -91,7 +105,7 @@ namespace PrevisionalAccountManager.ViewModels
             get;
             set {
                 field = value;
-                OnPropertyChanged(nameof(NewCategoryName));
+                OnPropertyChanged();
             }
         } = "";
 
@@ -116,6 +130,7 @@ namespace PrevisionalAccountManager.ViewModels
 
         public AccountBalanceViewModel(ITransactionService transactionService, ICategoryService categoryService)
         {
+            AmountOperations = AmountTypeExtensions.GetValues();
             _transactionService = transactionService;
             _categoryService = categoryService;
             _selectedDateRanges = new(2);
@@ -125,13 +140,13 @@ namespace PrevisionalAccountManager.ViewModels
             AllTransactions = new();
             AvailablePeriodTypes = PeriodTypeExtensions.GetValues();
             NewTransactionViewModel = new TransactionViewModel();
-            AddTransactionCommand = new RelayCommand(AddTransaction, CanAddTransaction);
+            AddTransactionCommand = new RelayCommand(OnAddTransactionClick, CanAddTransaction);
             RemoveTransactionCommand = new RelayCommand<TransactionViewModel>(RemoveTransaction);
-            AddCategoryCommand = new RelayCommand(AddCategory, CanAddCategory);
             SearchTransactionCommand = new RelayCommand(SearchTransaction, CanSearchTransaction);
             DeleteSelectedTransactionCommand = new RelayCommand(DeleteSelectedTransactions, CanDeleteSelectedTransactions);
             PeriodCount = 1;
             SelectedDate = DateTime.Today;
+            SelectedOperation = AmountType.Credit;
         }
 
         public void Restart()
@@ -152,9 +167,9 @@ namespace PrevisionalAccountManager.ViewModels
 
         private void SearchTransaction()
         {
-            var transactionSearchInput = new TransactionSearchInput(NewTransactionViewModel.Amount, _selectedDateRanges[0], NewTransactionViewModel.Category?.Id, NewTransactionViewModel.Observations);
-            var searchResult = _transactionService.GetTransactions(transactionSearchInput);
-            UpdateSelectedDateTransactions(searchResult);
+            var transactionSearchInput = new TransactionSearchInput(NewTransactionViewModel.Amount * (int)SelectedOperation, _selectedDateRanges[0], NewTransactionViewModel.Category?.Id, NewTransactionViewModel.Observations);
+            var searchResults = _transactionService.GetTransactions(transactionSearchInput);
+            UpdateSelectedDateTransactions(searchResults);
         }
 
         private void DeleteSelectedTransactions()
@@ -166,14 +181,14 @@ namespace PrevisionalAccountManager.ViewModels
             OnPropertyChanged(nameof(AllTransactions));
         }
 
-        private void AddCategory()
+        private CategoryViewModel AddCategory()
         {
             var newCategoryModel = _categoryService.AddCategory(NewCategoryName);
             var newCategoryViewModel = new CategoryViewModel(newCategoryModel);
 
             LoadCategories(); // Refresh the categories list
             SelectedCategory = newCategoryViewModel; // Auto-select the new category
-            NewCategoryName = ""; // Clear the input field
+            return newCategoryViewModel;
         }
 
         private void LoadCategories()
@@ -200,11 +215,15 @@ namespace PrevisionalAccountManager.ViewModels
             }
         }
 
-        private void AddTransaction()
+        private void OnAddTransactionClick()
         {
+            if ( NewTransactionViewModel.Category == null && !string.IsNullOrWhiteSpace(NewCategoryName) )
+            {
+                NewTransactionViewModel.Category = AddCategory();
+            }
+
             var transaction = new TransactionModel(NewTransactionViewModel.Model);
-            // Clear the navigation property and keep only the foreign key to prevent EF issues
-            transaction.Category = null;
+            transaction.Amount *= (int)SelectedOperation;
             var transactions = new List<TransactionModel>(PeriodCount) {
                 transaction
             };
@@ -257,8 +276,7 @@ namespace PrevisionalAccountManager.ViewModels
             get => NewTransactionViewModel.Date != default ? NewTransactionViewModel.Date : null;
             set {
                 NewTransactionViewModel.Date = value ?? default;
-
-                OnPropertyChanged(nameof(NewTransactionViewModelDate));
+                OnPropertyChanged();
             }
         }
 
@@ -266,7 +284,7 @@ namespace PrevisionalAccountManager.ViewModels
         {
             return NewTransactionViewModel.Amount != 0
                    && NewTransactionViewModel.Date != default
-                   && (NewTransactionViewModel.Category != null || !string.IsNullOrWhiteSpace(NewTransactionViewModel.Observations));
+                   && (NewTransactionViewModel.Category != null || !string.IsNullOrWhiteSpace(NewCategoryName) || !string.IsNullOrWhiteSpace(NewTransactionViewModel.Observations));
         }
 
         private bool CanSearchTransaction()
@@ -284,7 +302,7 @@ namespace PrevisionalAccountManager.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -330,7 +348,7 @@ namespace PrevisionalAccountManager.ViewModels
 
             // Add the last range
             _selectedDateRanges.Add(new(rangeStart, rangeEnd));
-            UpdateTransactionSelectionFromDateRanges(_selectedDateRanges.AsSpan(), transactionIndex-1);
+            UpdateTransactionSelectionFromDateRanges(_selectedDateRanges.AsSpan(), transactionIndex - 1);
         }
 
         private void UpdateTransactionSelectionFromDateRanges(ReadOnlySpan<DateRange> selectedDateRanges, int transactionCount = 8)
