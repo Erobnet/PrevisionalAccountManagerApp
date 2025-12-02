@@ -15,18 +15,18 @@
             </StackPanel.InputBindings>
 
             <!-- Title -->
-            <TextBlock Style="{DynamicResource TitleStyle}"
+            <TextBlock Style="{DynamicResource TitleStyleTextBlock}"
                        Text="{Binding FormTitle}"
                        />
 
             <!-- Username -->
-            <TextBlock Style="{DynamicResource FieldLabelStyle}" Text="Username:" />
+            <TextBlock Style="{DynamicResource FieldTextBlockStyle}" Text="Username:" />
             <TextBox
                 Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" />
 
             <!-- Password -->
-            <TextBlock Text="Password:" Style="{DynamicResource FieldLabelStyle}" />
+            <TextBlock Text="Password:" Style="{DynamicResource FieldTextBlockStyle}" />
             <Grid Margin="0,0,0,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -54,7 +54,7 @@
             </Grid>
 
             <!-- Confirm Password (only visible in create account mode) -->
-            <TextBlock Text="Confirm Password:" Style="{DynamicResource FieldLabelStyle}"
+            <TextBlock Text="Confirm Password:" Style="{DynamicResource FieldTextBlockStyle}"
                        Visibility="{Binding IsCreateAccountMode, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <Grid Margin="0,0,0,15"
                   Visibility="{Binding IsCreateAccountMode, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -122,7 +122,7 @@
         <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="20,15" Height="Auto">
           
             <TextBlock Text="Theme: " VerticalAlignment="Center" Margin="0,0,8,0"
-                       Style="{DynamicResource FieldLabelStyle}" />
+                       Style="{DynamicResource FieldTextBlockStyle}" />
             <ComboBox ItemsSource="{Binding AvailableThemes}"
                       SelectedItem="{Binding SelectedTheme}"
                       Width="120" Height="30">

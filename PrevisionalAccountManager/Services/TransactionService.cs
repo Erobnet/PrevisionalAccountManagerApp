@@ -59,10 +59,7 @@ namespace PrevisionalAccountManager.Services
 
         private IQueryable<TransactionModel> GetTransactionForDateImplem(DateTime date)
         {
-            return ctx.Transactions
-                .Include(x => x.Category)
-                .Where(t => t.Date.Date == date.Date)//ignore the time of the day
-                .GetCommonTransactionQuery(loginService);
+            return ctx.Transactions.GetTransactionInDateRangeQuery(new DateRange(date, date), loginService);
         }
 
         public List<TransactionModel> GetTransactionsForDateRange(DateRange range, List<TransactionModel>? transactions = null)
@@ -125,10 +122,6 @@ namespace PrevisionalAccountManager.Services
 
         private void AddTransactionImplementation(ITransactionModel entity)
         {
-            if ( entity.Id == Guid.Empty )
-            {
-                entity.Id = Guid.NewGuid();
-            }
             SetOwnership(entity.Model);
             SetRelationStateUnchanged(entity.Model);
             ctx.Transactions.Add(entity.Model);
@@ -212,8 +205,9 @@ namespace PrevisionalAccountManager.Services
         {
             internal IQueryable<TransactionModel> GetTransactionInDateRangeQuery(DateRange range, ILoginService loginService)
             {
-                return transactionModels
-                    .Where(t => t.Date.Date >= range.Start.Date && t.Date.Date <= range.End.Date)
+                return (range.IsSingleDay
+                        ? transactionModels.Where(t => t.Date.Date == range.Start.Date)
+                        : transactionModels.Where(t => t.Date.Date >= range.Start.Date && t.Date.Date <= range.End.Date))
                     .GetCommonTransactionQuery(loginService);
             }
 

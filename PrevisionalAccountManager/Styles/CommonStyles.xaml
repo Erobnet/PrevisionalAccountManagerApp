@@ -24,14 +24,20 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="TitleStyle" TargetType="TextBlock">
+    <Style x:Key="TitleStyleTextBlock" TargetType="TextBlock">
         <Setter Property="FontSize" Value="24" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     </Style>
-
+    <Style x:Key="TitleStyle" TargetType="Control">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+    </Style>
     <Style x:Key="TextBlockBase" TargetType="TextBlock">
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Padding" Value="8,6" />
@@ -39,7 +45,7 @@
         <Setter Property="FontSize" Value="12" />
     </Style>
 
-    <Style x:Key="FieldLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
+    <Style x:Key="FieldTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockBase}">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     </Style>
