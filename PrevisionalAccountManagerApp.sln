@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrevisionalAccountManager",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators", "SourceGenerators\SourceGenerators.csproj", "{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{EA034302-73AA-4A23-88D0-0FB6207974E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE9AAC6D-8202-41C3-BA6A-9F07D3F1E571}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA034302-73AA-4A23-88D0-0FB6207974E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA034302-73AA-4A23-88D0-0FB6207974E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA034302-73AA-4A23-88D0-0FB6207974E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA034302-73AA-4A23-88D0-0FB6207974E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

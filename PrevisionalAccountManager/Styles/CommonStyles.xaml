@@ -368,4 +368,4 @@
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Margin" Value="0,10,0,0" />
     </Style>
-</ResourceDictionary>
+</ResourceDictionary> 
