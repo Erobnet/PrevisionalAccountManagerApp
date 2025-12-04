@@ -45,7 +45,6 @@ namespace PrevisionalAccountManager.ViewModels
         public ICommand AddTransactionCommand { get; }
         public ICommand RemoveTransactionCommand { get; }
         public ICommand DeleteSelectedTransactionCommand { get; }
-        public ICommand AddCategoryCommand { get; }
         public ICommand SearchTransactionCommand { get; }
 
         public PeriodType SelectedPeriodType {
