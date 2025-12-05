@@ -19,14 +19,8 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Publish
-        run: dotnet publish --configuration Release --no-build
+      - name:  Restore dependencies Build Publish
+        run: dotnet publish --configuration Release
 
       - name: Archive published files
         run: Compress-Archive -Path ./Publish/* -DestinationPath ./release.zip
