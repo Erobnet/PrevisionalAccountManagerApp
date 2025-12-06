@@ -24,14 +24,8 @@ jobs:
         shell: pwsh
         run: |
           $currentVersion = ${{steps.get_appversion.outputs.version}}
-          $previousVersion = git describe --tags --abbrev=0          
-          if ($currentVersion -ne $previousVersion) {
-            echo "changed=true" >> $env:GITHUB_OUTPUT
-            echo "Version changed from $previousVersion to $currentVersion"
-          } else {
-            echo "changed=false" >> $env:GITHUB_OUTPUT
-            echo "Version unchanged: $currentVersion"
-          }
+          $previousVersion = (git describe --tags --abbrev=0)
+          echo "Version changed from $previousVersion to $currentVersion"      
       
       - name: Install .NET
         uses: actions/setup-dotnet@v5
