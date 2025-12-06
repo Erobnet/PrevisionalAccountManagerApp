@@ -23,7 +23,7 @@ jobs:
         id: check_change
         shell: pwsh
         run: |
-          $currentVersion = steps.get_appversion.outputs.version    
+          $currentVersion = $({{steps.get_appversion.outputs.version}})
           $previousVersion = git describe --tags --abbrev=0          
           if ($currentVersion -ne $previousVersion) {
             echo "changed=true" >> $env:GITHUB_OUTPUT
