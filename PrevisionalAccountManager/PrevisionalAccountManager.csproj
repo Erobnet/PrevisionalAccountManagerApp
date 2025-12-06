@@ -14,8 +14,8 @@
         <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
         <PublishDir>Publish</PublishDir>
         <SignAssembly>true</SignAssembly>
-        <Company>My Company</Company>
-        <Version>1.0.5</Version>
+        <Company>DrboumStudios</Company>
+        <Version>1.0.6</Version>
         <AssemblyOriginatorKeyFile>SignAssembly.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
         <StartupObject>PrevisionalAccountManager.App</StartupObject>
@@ -48,7 +48,7 @@
             <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
 
-        <PackageReference Include="Velopack" Version="0.0.1369-g1d5c984" />
+        <PackageReference Include="Velopack" Version="0.0.1298" />
     </ItemGroup>
     <!-- Pass MSBuild properties to the source generator -->
     <ItemGroup Label="SourceGenerators">

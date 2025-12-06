@@ -20,7 +20,7 @@
                        />
 
             <!-- Username -->
-            <TextBlock Style="{DynamicResource FieldTextBlockStyle}" Text="Username:" />
+            <TextBlock Style="{DynamicResource FieldTextBlockStyle}" Text="Login:" />
             <TextBox
                 Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 IsEnabled="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}" />
@@ -104,9 +104,11 @@
         </StackPanel>
         <!-- Theme Selector at the top -->
         <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="20,15" Height="Auto">
-          
-            <TextBlock Text="Theme: " VerticalAlignment="Center" Margin="0,0,8,0"
-                       Style="{DynamicResource FieldTextBlockStyle}" />
+          <Button Content="Check For Update" 
+                  Command="{Binding CheckForUpdateBtnCommand}"
+                  />
+          <TextBlock Text="Theme: " VerticalAlignment="Center" Margin="0,0,8,0"
+                     Style="{DynamicResource FieldTextBlockStyle}" />
             <ComboBox ItemsSource="{Binding AvailableThemes}"
                       SelectedItem="{Binding SelectedTheme}"
                       Width="120" Height="30">

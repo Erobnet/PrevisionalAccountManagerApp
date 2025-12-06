@@ -6,6 +6,7 @@ using PrevisionalAccountManager.Services;
 using System.Windows;
 using PrevisionalAccountManager.Models;
 using Velopack;
+using Velopack.Locators;
 using Velopack.Sources;
 
 namespace PrevisionalAccountManager
@@ -16,32 +17,40 @@ namespace PrevisionalAccountManager
         private static void Main(string[] args)
         {
             VelopackApp.Build().Run();
-            _ = UpdateAndRunApp();
-        }
-
-        private static async Task UpdateAndRunApp()
-        {
-            var updateSource = new GithubSource("https://github.com/Erobnet/PrevisionalAccountManagerApp/", null, false);
-            await UpdateMyApp(updateSource);
             App app = new();
             app.InitializeComponent();
             app.Run();
         }
 
+        public static async Task CheckForApplicationUpdate()
+        {
+            var updateSource = new GithubSource("https://github.com/Erobnet/PrevisionalAccountManagerApp/", null, false);
+            await UpdateMyApp(updateSource);
+        }
+
         private static async Task UpdateMyApp(IUpdateSource updateSource)
         {
-            var mgr = new UpdateManager(updateSource);
+            IVelopackLocator velopackLocator = VelopackLocator.Current;
+            var mgr = new UpdateManager(updateSource, locator: velopackLocator);
 
             // check for new version
-            var newVersion = await mgr.CheckForUpdatesAsync();
-            if ( newVersion == null )
-                return; // no update available
+            try
+            {
+                var newVersion = await mgr.CheckForUpdatesAsync();
+                if ( newVersion == null )
+                    return; // no update available
 
-            // download new version
-            await mgr.DownloadUpdatesAsync(newVersion);
+                // download new version
+                await mgr.DownloadUpdatesAsync(newVersion);
 
-            // install new version and restart app
-            mgr.ApplyUpdatesAndRestart(newVersion);
+                // install new version and restart app
+                mgr.ApplyUpdatesAndRestart(newVersion);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public static readonly string AppSpecificPath =

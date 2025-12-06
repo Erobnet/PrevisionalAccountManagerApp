@@ -11,7 +11,7 @@ using PrevisionalAccountManager.Utils;
 
 namespace PrevisionalAccountManager.ViewModels
 {
-    public class MainWindowViewModel : ViewModel,INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModel
     {
         private readonly ILoginService _loginService;
         private DataTemplate? _currentViewTemplate;

@@ -141,6 +141,7 @@ public class LoginRootViewModel : ViewModel, IRootViewModel
 
     public ICommand PrimaryCommand { get; }
     public ICommand ToggleModeCommand { get; }
+    public ICommand CheckForUpdateBtnCommand { get; }
     public ICommand BackupDatabaseCommand { get; }
     public ICommand ImportDatabaseCommand { get; }
     public ICommand TogglePasswordVisibilityCommand { get; }
@@ -162,12 +163,18 @@ public class LoginRootViewModel : ViewModel, IRootViewModel
         ToggleConfirmPasswordVisibilityCommand = new RelayCommand(ToggleConfirmPasswordVisibility);
         BackupDatabaseCommand = new RelayCommand(BackupDatabaseToFile);
         ImportDatabaseCommand = new RelayCommand(ImportDatabase);
+        CheckForUpdateBtnCommand = new RelayCommand(CheckForUpdateBtn);
 
         // Initialize with default theme 
         SelectedTheme = _styleService.CurrentTheme;
         System.Diagnostics.Debug.WriteLine($"App started with default {SelectedTheme.ToStringFast()} ");
         // Initialize the database
         _ = InitializeAsync();
+    }
+
+    private void CheckForUpdateBtn()
+    {
+        _ = CheckForApplicationUpdate();
     }
 
     private void ImportDatabase()
