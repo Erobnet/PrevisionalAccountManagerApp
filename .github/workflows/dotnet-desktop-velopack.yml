@@ -1,0 +1,39 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ "master" ]  # Change to your default branch if different
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write  # Allows creating releases
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        
+      - name: Get Version from Project File
+        id: get-version
+        shell: bash
+        run: echo "version=$(grep -oE '<Version>[^<]+' MyApplication/MyApplication.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+      
+      - name: Install .NET
+        uses: actions/setup-dotnet@v5
+        with:
+         dotnet-version: | 
+          9.0.x
+          10.0.x
+
+      - name: Restore dependencies Build Publish
+        run: dotnet publish --configuration Release
+
+      - name: Create Velopack Release
+        run: |
+          dotnet tool install -g vpk --version 0.0.1369-g1d5c984
+          vpk download github --repoUrl https://github.com/${{ github.repository }}
+          vpk pack -u PrevisionalAccountManager -v ${{ steps.get-version.outputs.version }} -p Publish
+          vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }}
