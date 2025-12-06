@@ -4,7 +4,7 @@ using PrevisionalAccountManager.Models.DataBaseEntities;
 
 namespace PrevisionalAccountManager.ViewModels
 {
-    public class CategoryViewModel : INotifyPropertyChanged
+    public class CategoryViewModel : ViewModel
     {
         private readonly CategoryModel _model;
 
@@ -47,13 +47,6 @@ namespace PrevisionalAccountManager.ViewModels
         /// Determines if this category is valid for operations
         /// </summary>
         public bool IsValid => !string.IsNullOrWhiteSpace(_model.Name);
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public override string ToString()
         {

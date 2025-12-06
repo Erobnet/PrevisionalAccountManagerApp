@@ -10,7 +10,7 @@ using PrevisionalAccountManager.Utils;
 
 namespace PrevisionalAccountManager.ViewModels;
 
-public class LoginViewModel : INotifyPropertyChanged, IViewModel
+public class LoginRootViewModel : ViewModel, IRootViewModel
 {
     private readonly ILoginService _loginService;
     private readonly IStyleService _styleService;
@@ -131,7 +131,7 @@ public class LoginViewModel : INotifyPropertyChanged, IViewModel
             _styleService.LoadStyleTheme(value);
             OnPropertyChanged();
         }
-    } = ColorTheme.DarkTheme;
+    }
 
     public IReadOnlyList<ColorTheme> AvailableThemes => _styleService.AvailableThemes;
 
@@ -148,10 +148,10 @@ public class LoginViewModel : INotifyPropertyChanged, IViewModel
 
     public event EventHandler<bool>? LoginAttempted;
 
-    public LoginViewModel() : this(GetRequiredInstance<ILoginService>(), GetRequiredInstance<IStyleService>())
+    public LoginRootViewModel() : this(GetRequiredInstance<ILoginService>(), GetRequiredInstance<IStyleService>())
     { }
 
-    public LoginViewModel(ILoginService loginService, IStyleService styleManagerService)
+    public LoginRootViewModel(ILoginService loginService, IStyleService styleManagerService)
     {
         _loginService = loginService;
         _styleService = styleManagerService;
@@ -398,13 +398,6 @@ public class LoginViewModel : INotifyPropertyChanged, IViewModel
         ConfirmPassword = string.Empty;
         IsPasswordVisible = false;
         IsConfirmPasswordVisible = false;
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
     public void Restart()

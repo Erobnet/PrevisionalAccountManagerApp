@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
@@ -11,12 +12,18 @@
         <MyGeneratorPrefix>Database</MyGeneratorPrefix>
         <PublishSingleFile>true</PublishSingleFile>
         <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
-        <PublishDir>..\Publish</PublishDir>
+        <PublishDir>Publish</PublishDir>
         <SignAssembly>true</SignAssembly>
+        <Company>My Company</Company>
+        <Version>1.0.5</Version>
         <AssemblyOriginatorKeyFile>SignAssembly.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
+        <StartupObject>PrevisionalAccountManager.App</StartupObject>
     </PropertyGroup>
-
+    <ItemGroup Label="InstallerSetup">
+        <ApplicationDefinition Remove="App.xaml"/>
+        <Page Include="App.xaml"/>
+    </ItemGroup>
     <ItemGroup Label="Packages">
         <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />
@@ -40,6 +47,8 @@
         <PackageReference Include="NetEscapades.EnumGenerators" Version="1.0.0-beta14" PrivateAssets="all" ExcludeAssets="runtime">
             <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
+        <PackageReference Include="Velopack" Version="0.0.1369-g1d5c984" />
     </ItemGroup>
     <!-- Pass MSBuild properties to the source generator -->
     <ItemGroup Label="SourceGenerators">

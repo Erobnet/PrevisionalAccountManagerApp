@@ -11,16 +11,16 @@ using PrevisionalAccountManager.Utils;
 
 namespace PrevisionalAccountManager.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : ViewModel,INotifyPropertyChanged
     {
         private readonly ILoginService _loginService;
         private DataTemplate? _currentViewTemplate;
         private bool _isLoggedIn = false;
 
-        private readonly LoginViewModel _loginViewModel;
-        private readonly AccountBalanceViewModel _accountBalanceViewModel;
+        private readonly LoginRootViewModel _loginRootViewModel;
+        private readonly AccountBalanceRootViewModel _accountBalanceRootViewModel;
 
-        public IViewModel? CurrentViewModel {
+        public IRootViewModel? CurrentViewModel {
             get;
             set {
                 field = value;
@@ -47,7 +47,7 @@ namespace PrevisionalAccountManager.ViewModels
 
         public ICommand ShowAccountBalanceCommand { get; }
         public ICommand LogoutCommand { get; }
-        public bool IsShowingAccountBalance => CurrentViewModel is AccountBalanceViewModel;
+        public bool IsShowingAccountBalance => CurrentViewModel is AccountBalanceRootViewModel;
 
         public MainWindowViewModel() : this(GetRequiredInstance<ILoginService>())
         { }
@@ -55,9 +55,9 @@ namespace PrevisionalAccountManager.ViewModels
         public MainWindowViewModel(ILoginService loginService)
         {
             _loginService = loginService;
-            _loginViewModel = new();
-            _loginViewModel.LoginAttempted += OnLoginAttempted;
-            _accountBalanceViewModel = new();
+            _loginRootViewModel = new();
+            _loginRootViewModel.LoginAttempted += OnLoginRootAttempted;
+            _accountBalanceRootViewModel = new();
 
             ShowAccountBalanceCommand = new RelayCommand(ShowAccountBalance, GetIsLoggedIn);
             LogoutCommand = new RelayCommand(Logout, GetIsLoggedIn);
@@ -71,7 +71,7 @@ namespace PrevisionalAccountManager.ViewModels
             return IsLoggedIn;
         }
 
-        private void OnLoginAttempted(object? sender, bool success)
+        private void OnLoginRootAttempted(object? sender, bool success)
         {
             if ( success )
             {
@@ -82,7 +82,7 @@ namespace PrevisionalAccountManager.ViewModels
 
         private void ShowLoginView()
         {
-            CurrentViewModel = _loginViewModel;
+            CurrentViewModel = _loginRootViewModel;
             CurrentViewTemplate = Application.Current.MainWindow?.FindResource("LoginViewTemplate") as DataTemplate;
             IsLoggedIn = false;
         }
@@ -91,7 +91,7 @@ namespace PrevisionalAccountManager.ViewModels
         {
             if ( IsLoggedIn )
             {
-                CurrentViewModel = _accountBalanceViewModel;
+                CurrentViewModel = _accountBalanceRootViewModel;
                 CurrentViewTemplate = Application.Current.MainWindow?.FindResource("AccountBalanceViewTemplate") as DataTemplate;
             }
         }
@@ -100,22 +100,10 @@ namespace PrevisionalAccountManager.ViewModels
         {
             _loginService.ClearCurrentSession();
             IsLoggedIn = false;
-            _loginViewModel.Username = string.Empty;
-            _loginViewModel.Password = string.Empty;
-            _loginViewModel.ErrorMessage = string.Empty;
+            _loginRootViewModel.Username = string.Empty;
+            _loginRootViewModel.Password = string.Empty;
+            _loginRootViewModel.ErrorMessage = string.Empty;
             ShowLoginView();
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public interface IViewModel
-    {
-        public void Restart();
     }
 }

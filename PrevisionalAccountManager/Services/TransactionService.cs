@@ -10,6 +10,8 @@ namespace PrevisionalAccountManager.Services
     {
         IReadOnlyList<TransactionModel> GetAllTransactions();
         Task<IReadOnlyList<TransactionModel>> GetAllTransactionsAsync();
+        void UpdateTransaction(ITransactionModel entity);
+        Task ApplyTransactionChangesAsync();
         void AddTransaction(ITransactionModel entity);
         void AddTransaction(IReadOnlyList<TransactionModel> entities);
         Task AddTransactionAsync(ITransactionModel entity);
@@ -34,15 +36,25 @@ namespace PrevisionalAccountManager.Services
         public IReadOnlyList<TransactionModel> GetAllTransactions()
         {
             return ctx.Transactions
-                .GetCommonTransactionQuery(loginService)
+                .GetCommonTransactionQuery(loginService.CurrentUserId)
                 .ToList();
         }
 
         public async Task<IReadOnlyList<TransactionModel>> GetAllTransactionsAsync()
         {
             return await ctx.Transactions
-                .GetCommonTransactionQuery(loginService)
+                .GetCommonTransactionQuery(loginService.CurrentUserId)
                 .ToListAsync();
+        }
+
+        public void UpdateTransaction(ITransactionModel entity)
+        {
+            ctx.Transactions.Update(entity.Model);
+        }
+
+        public Task ApplyTransactionChangesAsync()
+        {
+            return ctx.SaveChangesAsync();
         }
 
         public List<TransactionModel> GetTransactionsForDate(DateTime date)
@@ -59,13 +71,13 @@ namespace PrevisionalAccountManager.Services
 
         private IQueryable<TransactionModel> GetTransactionForDateImplem(DateTime date)
         {
-            return ctx.Transactions.GetTransactionInDateRangeQuery(new DateRange(date, date), loginService);
+            return ctx.Transactions.GetTransactionInDateRangeQuery(new DateRange(date, date), loginService.CurrentUserId);
         }
 
         public List<TransactionModel> GetTransactionsForDateRange(DateRange range, List<TransactionModel>? transactions = null)
         {
             transactions ??= [];
-            transactions.AddRange(ctx.Transactions.GetTransactionInDateRangeQuery(range, loginService));
+            transactions.AddRange(ctx.Transactions.GetTransactionInDateRangeQuery(range, loginService.CurrentUserId));
             return transactions;
         }
 
@@ -76,18 +88,18 @@ namespace PrevisionalAccountManager.Services
 
             return ctx.Transactions
                 .Where(t => (string.IsNullOrWhiteSpace(searchInput.Observations) || t.Observations.Contains(searchInput.Observations))
-                            && (searchInput.Amount == 0 || t.Amount == searchInput.Amount)
+                            && (searchInput.Amount == default || t.Amount == searchInput.Amount)
                             && (searchInput.Date == default || (searchInput.Date.IsSingleDay ? t.Date <= searchInput.Date.Start : t.Date >= searchInput.Date.Start && t.Date <= searchInput.Date.End))
                             && (!searchInput.CategoryId.HasValue || searchInput.CategoryId == t.CategoryId)
                 )
-                .GetCommonTransactionQuery(loginService)
+                .GetCommonTransactionQuery(loginService.CurrentUserId)
                 .ToArray();
         }
 
         public Task<List<TransactionModel>> GetTransactionsForDateRangeAsync(DateRange range)
         {
             return ctx.Transactions
-                .GetTransactionInDateRangeQuery(range, loginService)
+                .GetTransactionInDateRangeQuery(range, loginService.CurrentUserId)
                 .ToListAsync();
         }
 
@@ -203,19 +215,25 @@ namespace PrevisionalAccountManager.Services
     {
         extension(IQueryable<TransactionModel> transactionModels)
         {
-            internal IQueryable<TransactionModel> GetTransactionInDateRangeQuery(DateRange range, ILoginService loginService)
+            internal IQueryable<TransactionModel> GetTransactionInDateRangeQuery(DateRange range, int? userId)
             {
                 return (range.IsSingleDay
                         ? transactionModels.Where(t => t.Date.Date == range.Start.Date)
                         : transactionModels.Where(t => t.Date.Date >= range.Start.Date && t.Date.Date <= range.End.Date))
-                    .GetCommonTransactionQuery(loginService);
+                    .Include(t => t.Category)
+                    .GetCommonTransactionQuery(userId);
             }
 
-            internal IQueryable<TransactionModel> GetCommonTransactionQuery(ILoginService loginService)
+            internal IQueryable<TransactionModel> GetCommonTransactionQuery(int? userId)
             {
                 return transactionModels
-                    .Where(t => t.OwnerUserId == loginService.CurrentUserId)
+                    .WithUserId(userId)
                     .OrderByDescending(t => t.Date);
+            }
+
+            internal IQueryable<TransactionModel> WithUserId(int? userId)
+            {
+                return transactionModels.Where(t => t.OwnerUserId == userId);
             }
         }
 

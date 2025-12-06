@@ -24,7 +24,7 @@ public class AmountTypeToNumberConverter : IValueConverter
     {
         if ( value is string str )
         {
-            if ( str.Length == 1 && str[0] == '-' )
+            if ( str is ['-'] )
             {
                 return new Amount { Value = -1 };
             }
@@ -34,8 +34,7 @@ public class AmountTypeToNumberConverter : IValueConverter
                 return result;
             }
         }
-
+        
         return new Amount { Value = 0 };
-
     }
 }

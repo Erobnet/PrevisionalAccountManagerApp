@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:ui="http://schemas.modernwpf.com/2019">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="UserControl">
         <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"></Setter>
@@ -19,6 +18,7 @@
         <Style.Triggers>
             <Trigger Property="IsFocused" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -69,6 +69,7 @@
     <Style TargetType="ListViewItem" BasedOn="{ StaticResource {x:Type ListBoxItem}}" />
     <Style TargetType="TextBox" BasedOn="{StaticResource BaseInteractableComponent}">
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="40"></Setter>
     </Style>
     <Style TargetType="PasswordBox" BasedOn="{StaticResource BaseInteractableComponent}">
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -91,21 +92,20 @@
     <Style TargetType="Window" BasedOn="{StaticResource BaseInteractableComponent}" />
     <Style TargetType="DatePicker" BasedOn="{StaticResource BaseInteractableComponent}">
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
-        <Style.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-            </Trigger>
-            <Trigger Property="IsFocused" Value="True">
-                <Setter Property="Background" Value="Transparent" />
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-            </Trigger>
-        </Style.Triggers>
+        <!-- <Style.Triggers> -->
+        <!--     <Trigger Property="IsMouseOver" Value="True"> -->
+        <!--         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" /> -->
+        <!--     </Trigger> -->
+        <!--     <Trigger Property="IsFocused" Value="True"> -->
+        <!--         <Setter Property="Background" Value="Transparent" /> -->
+        <!--         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" /> -->
+        <!--     </Trigger> -->
+        <!-- </Style.Triggers> -->
     </Style>
 
     <!-- Calendar Style -->
     <Style x:Key="DefaultCalendarDayButtonStyle" TargetType="CalendarDayButton">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MinWidth" Value="40" />
@@ -114,111 +114,92 @@
         <Setter Property="FontSize" Value="20" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="FocusVisualStyle" Value="{DynamicResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
-        <Setter Property="ui:FocusVisualHelper.UseSystemFocusVisuals" Value="True" />
-        <Setter Property="ui:FocusVisualHelper.FocusVisualMargin" Value="-2" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="CalendarDayButton">
-                    <Grid SnapsToDevicePixels="True">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Margin="-1" />
-                        <Rectangle
-                            x:Name="Background"
-                            Fill="{TemplateBinding Background}" />
-                        <Border
-                            x:Name="HighlightBorder"
-                            BorderThickness="2" />
-                        <TextBlock x:Name="NormalText"
-                                   FontFamily="{TemplateBinding FontFamily}"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   FontWeight="{TemplateBinding FontWeight}"
-                                   Text="{TemplateBinding Content}"
-                                   HorizontalAlignment="Stretch"
-                                   TextAlignment="Center"
-                                   VerticalAlignment="Stretch">
-
-                        </TextBlock>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                            <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                            <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" />
-                            <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundHoverBrush}" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsSelected" Value="True" />
-                                <Condition Property="IsMouseOver" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsSelected" Value="True" />
-                                <Condition Property="IsPressed" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                        </MultiTrigger>
-                        <Trigger Property="IsInactive" Value="True">
-                            <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource DisabledBrush}" />
-                            <Setter TargetName="Background" Property="Opacity" Value="0.5" />
-                            <Setter TargetName="NormalText" Property="Opacity" Value="0.4" />
-                        </Trigger>
-                        <!-- <Trigger SourceName="DayStatesListener" Property="CurrentStateName" Value="Today"> -->
-                        <!--     <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundBrush}" /> -->
-                        <!--     <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource TextBrush}" /> -->
-                        <!-- </Trigger> -->
-                        <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" />
-                            <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" />
-                            <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundHoverBrush}" />
-                        </Trigger>
-                        <Trigger Property="IsBlackedOut" Value="True">
-                            <!-- <Condition SourceName="DayStatesListener" Property="CurrentStateName" Value="RegularDay" /> -->
-                            <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource DisabledBrush}" />
-                            <Setter TargetName="Background" Property="Opacity" Value="0.5" />
-                            <Setter TargetName="NormalText" Property="Opacity" Value="0.4" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource DisabledBrush}" />
-                            <Setter TargetName="Background" Property="Opacity" Value="0.5" />
-                            <Setter TargetName="NormalText" Property="Opacity" Value="0.4" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <!-- <Setter Property="FocusVisualStyle" Value="{DynamicResource {x:Static SystemParameters.FocusVisualStyleKey}}" /> -->
+        <!-- <Setter Property="ui:FocusVisualHelper.UseSystemFocusVisuals" Value="True" /> -->
+        <!-- <Setter Property="ui:FocusVisualHelper.FocusVisualMargin" Value="-2" /> -->
+        <!-- <Setter Property="Template"> -->
+        <!--     <Setter.Value> -->
+        <!--         <ControlTemplate TargetType="CalendarDayButton"> -->
+        <!--             <Grid SnapsToDevicePixels="True"> -->
+        <!--                 <Border BorderBrush="{TemplateBinding BorderBrush}" -->
+        <!--                         BorderThickness="{TemplateBinding BorderThickness}" -->
+        <!--                         Margin="-1" /> -->
+        <!--                 <Rectangle -->
+        <!--                     x:Name="Background" -->
+        <!--                     Fill="{TemplateBinding Background}" /> -->
+        <!--                 <Border -->
+        <!--                     x:Name="HighlightBorder" -->
+        <!--                     BorderThickness="2" /> -->
+        <!--                 <TextBlock x:Name="NormalText" -->
+        <!--                            FontFamily="{TemplateBinding FontFamily}" -->
+        <!--                            FontSize="{TemplateBinding FontSize}" -->
+        <!--                            FontWeight="{TemplateBinding FontWeight}" -->
+        <!--                            Text="{TemplateBinding Content}" -->
+        <!--                            HorizontalAlignment="Stretch" -->
+        <!--                            TextAlignment="Center" -->
+        <!--                            VerticalAlignment="Stretch"> -->
+        <!-- -->
+        <!--                 </TextBlock> -->
+        <!--             </Grid> -->
+        <!--             <ControlTemplate.Triggers> -->
+        <!--                 <Trigger Property="IsMouseOver" Value="True"> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" /> -->
+        <!--                 </Trigger> -->
+        <!--                 <Trigger Property="IsPressed" Value="True"> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                 </Trigger> -->
+        <!--                 <Trigger Property="IsSelected" Value="True"> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" /> -->
+        <!--                     <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundHoverBrush}" /> -->
+        <!--                 </Trigger> -->
+        <!--                 <MultiTrigger> -->
+        <!--                     <MultiTrigger.Conditions> -->
+        <!--                         <Condition Property="IsSelected" Value="True" /> -->
+        <!--                         <Condition Property="IsMouseOver" Value="True" /> -->
+        <!--                     </MultiTrigger.Conditions> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                 </MultiTrigger> -->
+        <!--                 <MultiTrigger> -->
+        <!--                     <MultiTrigger.Conditions> -->
+        <!--                         <Condition Property="IsSelected" Value="True" /> -->
+        <!--                         <Condition Property="IsPressed" Value="True" /> -->
+        <!--                     </MultiTrigger.Conditions> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                 </MultiTrigger> -->
+        <!--                 <Trigger Property="IsInactive" Value="True"> -->
+        <!--                     <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource DisabledBrush}" /> -->
+        <!--                     <Setter TargetName="Background" Property="Opacity" Value="0.5" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Opacity" Value="0.4" /> -->
+        <!--                 </Trigger> -->
+        <!--                 ~1~ <Trigger SourceName="DayStatesListener" Property="CurrentStateName" Value="Today"> @1@ -->
+        <!--                 ~1~     <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundBrush}" /> @1@ -->
+        <!--                 ~1~     <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource TextBrush}" /> @1@ -->
+        <!--                 ~1~ </Trigger> @1@ -->
+        <!--                 <Trigger Property="IsHighlighted" Value="True"> -->
+        <!--                     <Setter TargetName="HighlightBorder" Property="BorderBrush" Value="{DynamicResource BorderFocusBrush}" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Background" Value="{DynamicResource BackgroundHoverBrush}" /> -->
+        <!--                     <Setter TargetName="Background" Property="Fill" Value="{DynamicResource BackgroundHoverBrush}" /> -->
+        <!--                 </Trigger> -->
+        <!--                 <Trigger Property="IsBlackedOut" Value="True"> -->
+        <!--                     ~1~ <Condition SourceName="DayStatesListener" Property="CurrentStateName" Value="RegularDay" /> @1@ -->
+        <!--                     <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource DisabledBrush}" /> -->
+        <!--                     <Setter TargetName="Background" Property="Opacity" Value="0.5" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Opacity" Value="0.4" /> -->
+        <!--                 </Trigger> -->
+        <!--                 <Trigger Property="IsEnabled" Value="False"> -->
+        <!--                     <Setter TargetName="NormalText" Property="Foreground" Value="{DynamicResource DisabledBrush}" /> -->
+        <!--                     <Setter TargetName="Background" Property="Opacity" Value="0.5" /> -->
+        <!--                     <Setter TargetName="NormalText" Property="Opacity" Value="0.4" /> -->
+        <!--                 </Trigger> -->
+        <!--             </ControlTemplate.Triggers> -->
+        <!--         </ControlTemplate> -->
+        <!--     </Setter.Value> -->
+        <!-- </Setter> -->
     </Style>
 
-    <Style TargetType="Calendar" BasedOn="{StaticResource BaseInteractableComponent}">
-        <Setter Property="CalendarDayButtonStyle" Value="{StaticResource DefaultCalendarDayButtonStyle}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Calendar">
-                    <Border Background="{DynamicResource BackgroundBrush}"
-                            BorderBrush="{DynamicResource BorderBrush}"
-                            BorderThickness="1"
-                            CornerRadius="3">
-                        <CalendarItem x:Name="PART_CalendarItem"
-                                      Background="{DynamicResource BackgroundBrush}"
-                                      Foreground="{DynamicResource TextBrush}"
-                                      BorderBrush="{DynamicResource BorderBrush}"
-                                      BorderThickness="1" />
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    <Style TargetType="CalendarItem" BasedOn="{StaticResource BaseInteractableComponent}">
+    <Style x:Key="CalendarItemStyle" TargetType="CalendarItem" BasedOn="{StaticResource BaseInteractableComponent}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CalendarItem">
@@ -296,6 +277,26 @@
         </Setter>
     </Style>
 
+    <Style TargetType="Calendar" BasedOn="{StaticResource BaseInteractableComponent}">
+        <Setter Property="CalendarDayButtonStyle" Value="{StaticResource DefaultCalendarDayButtonStyle}" />
+        <Setter Property="CalendarItemStyle" Value="{StaticResource CalendarItemStyle}" />
+        <!-- <Setter Property="Template"> -->
+        <!--     <Setter.Value> -->
+        <!--         <ControlTemplate TargetType="Calendar"> -->
+        <!--             <Border Background="{DynamicResource BackgroundBrush}" -->
+        <!--                     BorderBrush="{DynamicResource BorderBrush}" -->
+        <!--                     BorderThickness="1" -->
+        <!--                     CornerRadius="3"> -->
+        <!--                 <CalendarItem x:Name="PART_CalendarItem" -->
+        <!--                               Background="{DynamicResource BackgroundBrush}" -->
+        <!--                               Foreground="{DynamicResource TextBrush}" -->
+        <!--                               BorderBrush="{DynamicResource BorderBrush}" -->
+        <!--                               BorderThickness="1" /> -->
+        <!--             </Border> -->
+        <!--         </ControlTemplate> -->
+        <!--     </Setter.Value> -->
+        <!-- </Setter> -->
+    </Style>
     <!-- Day of Week Headers -->
     <Style x:Key="CalendarDayOfWeekStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -368,4 +369,4 @@
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="Margin" Value="0,10,0,0" />
     </Style>
-</ResourceDictionary> 
+</ResourceDictionary>

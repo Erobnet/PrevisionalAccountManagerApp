@@ -21,7 +21,7 @@ namespace PrevisionalAccountManager.Views
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if ( DataContext is LoginViewModel viewModel && sender is PasswordBox passwordBox )
+            if ( DataContext is LoginRootViewModel viewModel && sender is PasswordBox passwordBox )
             {
                 viewModel.Password = passwordBox.Password;
                 // Sync with TextBox
@@ -34,7 +34,7 @@ namespace PrevisionalAccountManager.Views
 
         private void ConfirmPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            if ( DataContext is LoginViewModel viewModel && sender is PasswordBox passwordBox )
+            if ( DataContext is LoginRootViewModel viewModel && sender is PasswordBox passwordBox )
             {
                 viewModel.ConfirmPassword = passwordBox.Password;
                 // Sync with TextBox

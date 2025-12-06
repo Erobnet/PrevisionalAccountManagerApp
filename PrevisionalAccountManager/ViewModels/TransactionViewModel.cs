@@ -5,7 +5,7 @@ using PrevisionalAccountManager.Models.DataBaseEntities;
 
 namespace PrevisionalAccountManager.ViewModels;
 
-public sealed class TransactionViewModel(TransactionModel? data = null) : INotifyPropertyChanged, ITransactionModel
+public sealed class TransactionViewModel(TransactionModel? data = null) : ViewModel, ITransactionModel
 {
     public TransactionModel Model {
         get;
@@ -87,11 +87,4 @@ public sealed class TransactionViewModel(TransactionModel? data = null) : INotif
             OnPropertyChanged();
         }
     } = data?.Category != null ? new(data.Category) : null;
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
 }
