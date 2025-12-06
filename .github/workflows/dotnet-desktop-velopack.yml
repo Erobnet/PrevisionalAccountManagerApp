@@ -35,10 +35,10 @@ jobs:
               $previousVersion = "0.0.0"
             }    
             if ( ${{ steps.get_appversion.outputs.version }} -ne $previousVersion) {
-              $changed = true
+              $changed = 'true'
               echo "changed=true" >> $env:GITHUB_OUTPUT
             } else {
-              $changed = false
+              $changed = 'false'
               echo "changed=false" >> $env:GITHUB_OUTPUT
             }
             echo "Current version: $changed ${{ steps.get_appversion.outputs.version }}"
