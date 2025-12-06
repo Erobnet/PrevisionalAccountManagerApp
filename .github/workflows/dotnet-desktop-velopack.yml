@@ -8,7 +8,6 @@ jobs:
   build-and-release:
       runs-on: windows-latest  
       env:
-        version: "0.0.0"
         version_changed: 'false'
       permissions:
         contents: write  # Allows creating releases
