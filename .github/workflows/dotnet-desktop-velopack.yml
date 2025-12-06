@@ -6,9 +6,7 @@ on:
     
 jobs:  
   build-and-release:
-      runs-on: windows-latest  
-      env:
-        version_changed: 'false'
+      runs-on: windows-latest
       permissions:
         contents: write  # Allows creating releases
       
@@ -19,7 +17,9 @@ jobs:
         - name: Get Version from Project File
           id: get_version
           shell: bash
-          run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
+          run: |
+            echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
+            echo "${{env.version}}"
   
         - name: Check if version changed
           id: check_change
