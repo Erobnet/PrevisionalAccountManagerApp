@@ -7,6 +7,9 @@ on:
 jobs:  
   check-version:
       runs-on: windows-latest
+      outputs:
+        version: ${{ steps.get_version.outputs.version }}
+        version_changed: ${{ steps.check_change.outputs.changed }}
       permissions:
         contents: write  # Allows creating releases
       
@@ -15,7 +18,7 @@ jobs:
           uses: actions/checkout@v6
     
         - name: Get Version from Project File
-          id: get_appversion
+          id: get_version
           shell: bash
           run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
   
@@ -61,5 +64,5 @@ jobs:
       run: |
         dotnet tool install -g vpk
         vpk download github --repoUrl https://github.com/${{ github.repository }}
-        vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ steps.get-version.outputs.version }}
-        vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get_appversion.outputs.version }}" --tag v${{ steps.get_appversion.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
+        vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ needs.steps.version.outputs.version }}
+        vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ needs.steps.version.outputs.version }}" --tag v${{needs.steps.version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
