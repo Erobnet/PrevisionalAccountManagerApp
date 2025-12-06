@@ -17,7 +17,7 @@ jobs:
         - name: Get Version from Project File
           id: get_version
           shell: bash
-          run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+          run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
   
         - name: Check if version changed
           id: check_change
@@ -28,7 +28,7 @@ jobs:
               Accept = "application/vnd.github.v3+json"
             }    
             $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
-            $currentVersion = "${{ steps.get_version.outputs.version }}"
+            $currentVersion = "$env:VERSION"
             
             if ($response.Count -gt 0) {
               $previousVersion = $response[0].name.TrimStart('v')
@@ -59,8 +59,7 @@ jobs:
         - name: Create Velopack Release
           if: steps.check_change.outputs.version_changed == 'true'
           run: |
-            VERSION= ${{ steps.get_version.outputs.version }}
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
-            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v $VERSION
-            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager $VERSION" --tag v$VERSION --token ${{ secrets.GITHUB_TOKEN }}
+            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{env:version}}
+            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{env:version}}" --tag v${{env:version}} --token ${{ secrets.GITHUB_TOKEN }}
