@@ -11,15 +11,6 @@ jobs:
       contents: write  # Allows creating releases
     
     steps:
-    
-      - name: Get version from git tag
-        id: get_tag_version
-        run: 
-          echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
-    
-      - name: Use the version
-        run: echo "Current version is ${{ steps.get_tag_version.outputs.version }}"
-        
       - name: Checkout Repository
         uses: actions/checkout@v6
         
@@ -39,6 +30,7 @@ jobs:
         run: dotnet publish --configuration Release
 
       - name: Create Velopack Release
+        if: $(git describe --tags --abbrev=0) != steps.get_appversion.outputs.version
         run: |
           dotnet tool install -g vpk --version 0.0.1369-g1d5c984
           vpk download github --repoUrl https://github.com/${{ github.repository }}
