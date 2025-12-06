@@ -30,12 +30,16 @@ jobs:
           $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
           
           if ($response.Count -gt 0) {
-            $version = $response[0].name
+            $previousVersion = $response[0].name
           } else {
-            $version = "0.0.0"
+            $previousVersion = "0.0.0"
           }    
-          echo "version=$version" >> $env:GITHUB_OUTPUT
-          echo "Current version: $version"
+          if ( ${{ steps.get_appversion.outputs.version }} -ne $previousVersion) {
+            echo "changed=true" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "changed=false" >> $env:GITHUB_OUTPUT
+          }
+          echo "Current version: $changed ${{ steps.get_appversion.outputs.version }}"
       
       - name: Install .NET
         uses: actions/setup-dotnet@v5
@@ -48,7 +52,7 @@ jobs:
         run: dotnet publish --configuration Release
 
       - name: Create Velopack Release
-        if: ${{ steps.get_appversion.outputs.version }} != ${{ steps.Get_tagversion.outputs.version }}
+        if: ${{ steps.check_change.outputs.version }} == 'true'
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/${{ github.repository }}
