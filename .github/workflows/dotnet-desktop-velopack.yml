@@ -30,9 +30,9 @@ jobs:
         run: dotnet publish --configuration Release
 
       - name: Create Velopack Release
-        if: $(git describe --tags --abbrev=0) != steps.get_appversion.outputs.version
+        if: git describe --tags --abbrev=0 != steps.get_appversion.outputs.version
         run: |
-          dotnet tool install -g vpk --version 0.0.1369-g1d5c984
+          dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/${{ github.repository }}
           vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ steps.get-version.outputs.version }}
           vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get_appversion.outputs.version }}" --tag v${{ steps.get_appversion.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
