@@ -59,7 +59,7 @@ jobs:
         - name: Create Velopack Release
           if: steps.check_change.outputs.version_changed == 'true'
           run: |
-            $VERSION= ${{ steps.get_version.outputs.version }}
+            VERSION= ${{ steps.get_version.outputs.version }}
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
             vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v $VERSION
