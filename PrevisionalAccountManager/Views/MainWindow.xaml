@@ -13,6 +13,9 @@
         <DataTemplate x:Key="AccountBalanceViewTemplate">
             <views:AccountBalanceView />
         </DataTemplate>
+        <DataTemplate x:Key="ProgressBarTemplate">
+            <views:ProgressBar />
+        </DataTemplate>
     </Window.Resources>
     <Window.DataContext>
         <vm:MainWindowViewModel />

@@ -4,10 +4,14 @@ using System.IO;
 using System.Reflection;
 using PrevisionalAccountManager.Services;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using PrevisionalAccountManager.Models;
+using PrevisionalAccountManager.ViewModels;
 using Velopack;
 using Velopack.Locators;
 using Velopack.Sources;
+using ProgressBar = ModernWpf.Controls.ProgressBar;
 
 namespace PrevisionalAccountManager
 {
@@ -40,11 +44,18 @@ namespace PrevisionalAccountManager
                 if ( newVersion == null )
                     return; // no update available
 
-                // download new version
-                await mgr.DownloadUpdatesAsync(newVersion);
+                if ( MessageBox.Show(Current.MainWindow, "a new version is available, do you want to download it  now?", "Update available", MessageBoxButton.YesNo) == MessageBoxResult.Yes )
+                {
+                    var mainVm = (Current.MainWindow.DataContext as MainWindowViewModel);
+                    var mainVmCurrentViewModel = new ProgressBarViewModel();
+                    mainVm.CurrentViewTemplate = Current.MainWindow?.FindResource("ProgressBarTemplate") as DataTemplate;
+                    mainVm.CurrentViewModel = mainVmCurrentViewModel;
 
-                // install new version and restart app
-                mgr.ApplyUpdatesAndRestart(newVersion);
+                    // download new version
+                    await mgr.DownloadUpdatesAsync(newVersion, (step => mainVmCurrentViewModel.ProgressValue = step));
+                    // install new version and restart app
+                    mgr.ApplyUpdatesAndRestart(newVersion);
+                }
             }
             catch (Exception e)
             {

@@ -61,6 +61,7 @@ namespace PrevisionalAccountManager.ViewModels
 
             ShowAccountBalanceCommand = new RelayCommand(ShowAccountBalance, GetIsLoggedIn);
             LogoutCommand = new RelayCommand(Logout, GetIsLoggedIn);
+            _ = CheckForApplicationUpdate();
 
             // Start with Login view
             ShowLoginView();
