@@ -30,7 +30,7 @@ jobs:
             $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
             
             if ($response.Count -gt 0) {
-              $previousVersion = $response[0].name
+              $previousVersion = $response[0].name.TrimStart('v')
             } else {
               $previousVersion = "0.0.0"
             }    
