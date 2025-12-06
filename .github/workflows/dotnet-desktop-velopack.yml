@@ -57,6 +57,7 @@ jobs:
           run: dotnet publish --configuration Release
       
         - name: Create Velopack Release
+          if: steps.check_change.outputs.version_changed == 'true'
           run: |
             $VERSION= ${{ steps.get_version.outputs.version }}
             dotnet tool install -g vpk
