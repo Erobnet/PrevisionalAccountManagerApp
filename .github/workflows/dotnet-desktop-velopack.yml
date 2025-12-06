@@ -20,7 +20,7 @@ jobs:
         - name: Get Version from Project File
           id: get_version
           shell: bash
-          run: echo "VERSION=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
+          run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
   
         - name: Check if version changed
           id: check_change
