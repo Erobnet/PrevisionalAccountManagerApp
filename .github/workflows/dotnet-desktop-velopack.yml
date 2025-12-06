@@ -7,6 +7,9 @@ on:
 jobs:  
   build-and-release:
       runs-on: windows-latest  
+      env:
+        version: "0.0.0"
+        version_changed: 'false'
       permissions:
         contents: write  # Allows creating releases
       
@@ -45,7 +48,7 @@ jobs:
             echo "Current version: $version_changed ( $previousVersion -> $currentVersion )"
  
         - name: Install .NET
-          if: env.version_changed == 'true'
+          if: ${{ env.version_changed == 'true' }}
           uses: actions/setup-dotnet@v5
           with:
            dotnet-version: | 
@@ -53,13 +56,13 @@ jobs:
             10.0.x
       
         - name: Restore dependencies Build Publish
-          if: env.version_changed == 'true'
+          if: ${{ env.version_changed == 'true' }}
           run: dotnet publish --configuration Release
       
         - name: Create Velopack Release
-          if: env.version_changed == 'true'
+          if: ${{ env.version_changed == 'true' }}
           run: |
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
-            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ env:VERSION }}
-            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ env:VERSION }}" --tag v${{ env:version }} --token ${{ secrets.GITHUB_TOKEN }}
+            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ env:version }}
+            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ env:version }}" --tag v${{ env:version }} --token ${{ secrets.GITHUB_TOKEN }}
