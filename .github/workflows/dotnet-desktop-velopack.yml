@@ -13,6 +13,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
+
+      - name: Get Version from tags
+        id: Get_tagversion
+        run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
         
       - name: Get Version from Project File
         id: get_appversion
@@ -30,7 +34,7 @@ jobs:
         run: dotnet publish --configuration Release
 
       - name: Create Velopack Release
-        if: git describe --tags --abbrev=0 != steps.get_appversion.outputs.version
+        if: ${{ steps.get_appversion.outputs.version }} != ${{ steps.Get_tagversion.outputs.version }}
         run: |
           dotnet tool install -g vpk
           vpk download github --repoUrl https://github.com/${{ github.repository }}
