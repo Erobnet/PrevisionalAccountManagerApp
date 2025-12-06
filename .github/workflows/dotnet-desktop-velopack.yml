@@ -28,7 +28,7 @@ jobs:
               Accept = "application/vnd.github.v3+json"
             }    
             $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
-            $currentVersion = ${{ steps.get_version.outputs.version }}
+            $currentVersion = "${{ steps.get_version.outputs.version }}"
             
             if ($response.Count -gt 0) {
               $previousVersion = $response[0].name.TrimStart('v')
