@@ -16,7 +16,15 @@ jobs:
 
       - name: Get Version from tags
         id: Get_tagversion
-        run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+        shell: pwsh
+        run: |
+          $tags = git tag
+          if ($tags) {
+            $version = git describe --tags --abbrev=0
+          } else {
+            $version = "0.0.0"
+          }
+          echo "version=$version" >> $env:GITHUB_OUTPUT
         
       - name: Get Version from Project File
         id: get_appversion
