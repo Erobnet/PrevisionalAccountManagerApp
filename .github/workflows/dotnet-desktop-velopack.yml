@@ -31,7 +31,7 @@ jobs:
               Accept = "application/vnd.github.v3+json"
             }    
             $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
-            $currentVersion = "$env:VERSION"
+            $currentVersion = "${{ env:version }}"
             
             if ($response.Count -gt 0) {
               $previousVersion = $response[0].name.TrimStart('v')
@@ -65,4 +65,4 @@ jobs:
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
             vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ env:version }}
-            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ env:version }}" --tag v${{ env:version }} --token ${{ secrets.GITHUB_TOKEN }}
+            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager${{ env:version }}" --tag v${{ env:version }} --token ${{ secrets.GITHUB_TOKEN }}
