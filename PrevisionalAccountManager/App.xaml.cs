@@ -44,7 +44,7 @@ namespace PrevisionalAccountManager
                 if ( newVersion == null )
                     return; // no update available
 
-                if ( MessageBox.Show(Current.MainWindow, "a new version is available, do you want to download it  now?", "Update available", MessageBoxButton.YesNo) == MessageBoxResult.Yes )
+                if ( MessageBox.Show(Current.MainWindow, "A new version is available, the installing process will begin", "Update available", MessageBoxButton.OK) == MessageBoxResult.OK )
                 {
                     var mainVm = (Current.MainWindow.DataContext as MainWindowViewModel);
                     var mainVmCurrentViewModel = new ProgressBarViewModel();

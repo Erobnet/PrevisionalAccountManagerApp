@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
 using NetEscapades.EnumGenerators;
@@ -10,95 +8,84 @@ using PrevisionalAccountManager.Utils;
 
 namespace PrevisionalAccountManager.ViewModels;
 
-public class LoginRootViewModel : ViewModel, IRootViewModel
+public sealed class LoginRootViewModel : ViewModel, IRootViewModel
 {
     private readonly ILoginService _loginService;
     private readonly IStyleService _styleService;
-    private string _username = string.Empty;
-    private string _password = string.Empty;
-    private string _confirmPassword = string.Empty;
-    private string _errorMessage = string.Empty;
-    private string _successMessage = string.Empty;
-    private bool _hasError;
-    private bool _hasSuccess;
-    private bool _isLoading;
-    private bool _isCreateAccountMode;
-    private bool _isPasswordVisible = false;
-    private bool _isConfirmPasswordVisible = false;
 
     public string Username {
-        get => _username;
+        get;
         set {
-            _username = value;
+            field = value;
             OnPropertyChanged();
             ClearMessages();
         }
-    }
+    } = string.Empty;
 
     public string Password {
-        get => _password;
+        get;
         set {
-            _password = value;
+            field = value;
             OnPropertyChanged();
             ClearMessages();
         }
-    }
+    } = string.Empty;
 
     public string ConfirmPassword {
-        get => _confirmPassword;
+        get;
         set {
-            _confirmPassword = value;
+            field = value;
             OnPropertyChanged();
             ClearMessages();
         }
-    }
+    } = string.Empty;
 
     public string ErrorMessage {
-        get => _errorMessage;
+        get;
         set {
-            _errorMessage = value;
+            field = value;
             OnPropertyChanged();
             HasError = !string.IsNullOrEmpty(value);
         }
-    }
+    } = string.Empty;
 
     public string SuccessMessage {
-        get => _successMessage;
+        get;
         set {
-            _successMessage = value;
+            field = value;
             OnPropertyChanged();
             HasSuccess = !string.IsNullOrEmpty(value);
         }
-    }
+    } = string.Empty;
 
     public bool HasError {
-        get => _hasError;
+        get;
         set {
-            _hasError = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public bool HasSuccess {
-        get => _hasSuccess;
+        get;
         set {
-            _hasSuccess = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public bool IsLoading {
-        get => _isLoading;
+        get;
         set {
-            _isLoading = value;
+            field = value;
             OnPropertyChanged();
         }
     }
 
     public bool IsCreateAccountMode {
-        get => _isCreateAccountMode;
+        get;
         set {
-            _isCreateAccountMode = value;
+            field = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(FormTitle));
             OnPropertyChanged(nameof(PrimaryButtonText));
@@ -109,20 +96,20 @@ public class LoginRootViewModel : ViewModel, IRootViewModel
     }
 
     public bool IsPasswordVisible {
-        get => _isPasswordVisible;
+        get;
         set {
-            _isPasswordVisible = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = false;
 
     public bool IsConfirmPasswordVisible {
-        get => _isConfirmPasswordVisible;
+        get;
         set {
-            _isConfirmPasswordVisible = value;
+            field = value;
             OnPropertyChanged();
         }
-    }
+    } = false;
 
     public ColorTheme SelectedTheme {
         get;
@@ -135,13 +122,12 @@ public class LoginRootViewModel : ViewModel, IRootViewModel
 
     public IReadOnlyList<ColorTheme> AvailableThemes => _styleService.AvailableThemes;
 
-    public virtual string FormTitle => IsCreateAccountMode ? "Create Account" : "Login";
+    public string FormTitle => IsCreateAccountMode ? "Create Account" : "Login";
     public string PrimaryButtonText => IsCreateAccountMode ? "Create Account" : "Login";
     public string ToggleButtonText => IsCreateAccountMode ? "Back to Login" : "Create New Account";
 
     public ICommand PrimaryCommand { get; }
     public ICommand ToggleModeCommand { get; }
-    public ICommand CheckForUpdateBtnCommand { get; }
     public ICommand BackupDatabaseCommand { get; }
     public ICommand ImportDatabaseCommand { get; }
     public ICommand TogglePasswordVisibilityCommand { get; }
@@ -163,18 +149,12 @@ public class LoginRootViewModel : ViewModel, IRootViewModel
         ToggleConfirmPasswordVisibilityCommand = new RelayCommand(ToggleConfirmPasswordVisibility);
         BackupDatabaseCommand = new RelayCommand(BackupDatabaseToFile);
         ImportDatabaseCommand = new RelayCommand(ImportDatabase);
-        CheckForUpdateBtnCommand = new RelayCommand(CheckForUpdateBtn);
 
         // Initialize with default theme 
         SelectedTheme = _styleService.CurrentTheme;
         System.Diagnostics.Debug.WriteLine($"App started with default {SelectedTheme.ToStringFast()} ");
         // Initialize the database
         _ = InitializeAsync();
-    }
-
-    private void CheckForUpdateBtn()
-    {
-        _ = CheckForApplicationUpdate();
     }
 
     private void ImportDatabase()
