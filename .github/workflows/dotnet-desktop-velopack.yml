@@ -18,8 +18,8 @@ jobs:
           id: get_version
           shell: bash
           run: |
-            echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $env:GITHUB_ENV
-            echo "${{env.version}}"
+            echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $GITHUB_ENV
+            echo "$version"
   
         - name: Check if version changed
           id: check_change
