@@ -28,7 +28,7 @@ jobs:
               Accept = "application/vnd.github.v3+json"
             }    
             $response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/tags" -Headers $headers
-            $currentVersion = ${{steps.get_version.outputs.version}}
+            $currentVersion = ${{ steps.get_version.outputs.version }}
             
             if ($response.Count -gt 0) {
               $previousVersion = $response[0].name.TrimStart('v')
@@ -58,7 +58,7 @@ jobs:
       
         - name: Create Velopack Release
           run: |
-            $VERSION=${{steps.get_version.outputs.version}}
+            $VERSION= ${{ steps.get_version.outputs.version }}
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
             vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v $VERSION
