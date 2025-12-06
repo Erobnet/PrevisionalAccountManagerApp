@@ -3,9 +3,7 @@ name: Build and Release
 on:
   push:
     branches: [ "master" ]  # Change to your default branch if different
-    tags:
-      - 'v*'  # Trigger on version tags like v1.0.0
-
+    
 jobs:
   build-and-release:
     runs-on: windows-latest
@@ -13,11 +11,21 @@ jobs:
       contents: write  # Allows creating releases
     
     steps:
+    
+      - name: Get version from git tag
+        id: get_tag_version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+    
+      - name: Use the version
+        run: echo "Current version is ${{ steps.get_tag_version.outputs.version }}"
+        
       - name: Checkout Repository
         uses: actions/checkout@v6
         
       - name: Get Version from Project File
-        id: get-version
+        id: get_appversion
         shell: bash
         run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
       
@@ -36,4 +44,4 @@ jobs:
           dotnet tool install -g vpk --version 0.0.1369-g1d5c984
           vpk download github --repoUrl https://github.com/${{ github.repository }}
           vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ steps.get-version.outputs.version }}
-          vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
+          vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get_appversion.outputs.version }}" --tag v${{ steps.get_appversion.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
