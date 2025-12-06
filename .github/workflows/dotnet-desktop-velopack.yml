@@ -36,4 +36,4 @@ jobs:
           dotnet tool install -g vpk --version 0.0.1369-g1d5c984
           vpk download github --repoUrl https://github.com/${{ github.repository }}
           vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ steps.get-version.outputs.version }}
-          vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }}
+          vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager ${{ steps.get-version.outputs.version }}" --tag v${{ steps.get-version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
