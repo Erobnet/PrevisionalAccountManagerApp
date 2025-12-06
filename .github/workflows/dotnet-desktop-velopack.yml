@@ -13,23 +13,25 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6
-
-      - name: Get Version from tags
-        id: Get_tagversion
-        shell: pwsh
-        run: |
-          $tags = git tag
-          if ($tags) {
-            $version = git describe --tags --abbrev=0
-          } else {
-            $version = "0.0.0"
-          }
-          echo "version=$version" >> $env:GITHUB_OUTPUT
-        
+  
       - name: Get Version from Project File
         id: get_appversion
         shell: bash
         run: echo "version=$(grep -oE '<Version>[^<]+' PrevisionalAccountManager/PrevisionalAccountManager.csproj | sed 's/<Version>//')" >> $GITHUB_OUTPUT
+
+      - name: Check if version changed
+        id: check_change
+        shell: pwsh
+        run: |
+          $currentVersion = steps.get_appversion.outputs.version    
+          $previousVersion = git describe --tags --abbrev=0          
+          if ($currentVersion -ne $previousVersion) {
+            echo "changed=true" >> $env:GITHUB_OUTPUT
+            echo "Version changed from $previousVersion to $currentVersion"
+          } else {
+            echo "changed=false" >> $env:GITHUB_OUTPUT
+            echo "Version unchanged: $currentVersion"
+          }
       
       - name: Install .NET
         uses: actions/setup-dotnet@v5
