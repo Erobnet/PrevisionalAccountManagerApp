@@ -44,7 +44,7 @@ jobs:
             echo "Current version: $changed( $previousVersion -> ${{ steps.get_version.outputs.version }} )"
  
         - name: Install .NET
-          if: step.check_change.outputs.version_changed == 'true'
+          if: steps.check_change.outputs.version_changed == 'true'
           uses: actions/setup-dotnet@v5
           with:
            dotnet-version: | 
@@ -52,13 +52,13 @@ jobs:
             10.0.x
       
         - name: Restore dependencies Build Publish
-          if: step.check-version.outputs.version_changed == 'true'
+          if: steps.check_change.outputs.version_changed == 'true'
           run: dotnet publish --configuration Release
       
         - name: Create Velopack Release
           run: |
-            $VERSION=${{steps.version.outputs.version}}
+            $VERSION=${{steps.get_version.outputs.version}}
             dotnet tool install -g vpk
             vpk download github --repoUrl https://github.com/${{ github.repository }}
-            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v ${{ needs.steps.version.outputs.version }}
-            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager $VERSION" --tag v${{needs.steps.version.outputs.version }} --token ${{ secrets.GITHUB_TOKEN }}
+            vpk pack --packId PrevisionalAccountManager --packDir PrevisionalAccountManager/Publish --mainExe PrevisionalAccountManager.exe --noPortable --skipVeloAppCheck -v $VERSION
+            vpk upload github --repoUrl https://github.com/${{ github.repository }} --publish --releaseName "PrevisionalAccountManager $VERSION" --tag v$VERSION --token ${{ secrets.GITHUB_TOKEN }}
