@@ -14,9 +14,8 @@ jobs:
     
       - name: Get version from git tag
         id: get_tag_version
-        run: |
-          VERSION=$(git describe --tags --abbrev=0)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        run: 
+          echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
     
       - name: Use the version
         run: echo "Current version is ${{ steps.get_tag_version.outputs.version }}"
